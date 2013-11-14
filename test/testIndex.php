@@ -1,7 +1,5 @@
 <?php
 getRoute()->get('/tests', array('Tests', 'home'));
-getRoute()->post('/tests/login', array('Tests', 'login'));
-getRoute()->post('/tests/logout', array('Tests', 'logout'));
 getRoute()->get('/tests/addEntity', array('Tests', 'addEntity'));
 getRoute()->get('/tests/viewEntity/(.+)/(.+)', array('Tests', 'viewEntity'));
 getRoute()->get('/tests/listEntities', array('Tests', 'listEntities'));
@@ -64,8 +62,36 @@ class Tests{
 		
 		echo "<h2>Content</h2>";
 		echo "<textarea id='entityContent' name='data'></textarea>";
+		echo "<div>";
+		echo "<button onclick='return updateEntity();'>Update</button>";
+		echo "<button onclick='deleteEntity();'>Delete</button>";
+		echo "</div>";
 		
 		echo "<script type='text/javascript'>
+			function deleteEntity(){
+				if(confirm('Are you sure you wish to delete this entity?')){
+					var result = cwrcApi['" . $type . "'].deleteEntity('" . $pid . "');
+					
+					if(result.isDeleted){
+						alert('Entity Successfully deleted.');
+					}else{
+						alert(result.error);
+					}
+				}	
+			}
+			
+			function updateEntity(){
+				var result = cwrcApi['" . $type . "'].modifyEntity('" . $pid . "', $('#entityContent').val());
+				
+				if(result.error){
+					alert(result.error);
+				}else{
+					alert('Entity modified successfully.')
+				}
+				
+				return false;
+			}
+			
 			$(document).ready(function(){
 				var val = cwrcApi['" . $type . "'].getEntity('" . $pid . "');
 				$('#entityContent').val(val);

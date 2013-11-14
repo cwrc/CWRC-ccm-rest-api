@@ -76,26 +76,28 @@ class Entity {
 
 		array_push($header, 'Content-Type: multipart/form-data; boundary=' . MULTIPART_BOUNDRY);
 
-		if (!$this -> $content) {
+		if ($this -> content == NULL) {
 			$method = 'POST';
 			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream";
 			$data = array('dsid' => $this -> content_name, 'mimeType' => 'text/xml', 'label' => 'Entity Data', 'controlGroup' => 'M');
 		} else {
-			$mthod = 'PUT';
-			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream";
-			$data = array('dsid' => $this -> content_name, 'mimeType' => 'text/xml', 'label' => 'Entity Data', 'controlGroup' => 'M');
+			$method = 'PUT';
+			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream/" . $this -> content_name;
+			$data = array('versionable' => 'true');
 		}
 
 		$content = $this -> createFormContent($inputXml, $data);
 		//array_push($header, 'Content-Length: ' . strlen($content));
 
-		$context = stream_context_create(array('http' => array('header' => $header, 'method' => 'POST', 'content' => $content)));
+		$context = stream_context_create(array('http' => array('header' => $header, 'method' => $method, 'content' => $content)));
 
 		$result = file_get_contents($url, false, $context);
 
 		if (strpos($http_response_header[0], "201")) {
 			return null;
-		} else {
+		} else if (strpos($http_response_header[0], "200")) {
+			return null;
+		}else {
 			return $http_response_header[0];
 		}
 	}

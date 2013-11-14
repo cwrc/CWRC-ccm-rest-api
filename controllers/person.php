@@ -48,12 +48,13 @@ class PersonController extends EntityController {
 	}
 	
 	public static function update($id){
-		$result = EntityController::modifyEntity('cwrc', 'PERSON', $_POST['data']);
+		$result = EntityController::modifyEntity('PERSON', $id, $_POST['data']);
 		$object = array();
 		
 		if(get_class($result) == "Entity"){
 			$object["pid"] = $result->getPID();
 		}else{
+			$object["pid"] = $id;
 			$object["error"] = $result;
 		}
 		
@@ -61,6 +62,16 @@ class PersonController extends EntityController {
 	}
 	
 	public static function delete($id){
+		$result = EntityController::deleteEntity($id);
+		$object = array();
 		
+		if($result == null){
+			$object['isDeleted'] = true;
+		}else{
+			$object['isDeleted'] = false;
+			$object['error'] = $result;
+		}
+		
+		echo json_encode($object);
 	}
 }

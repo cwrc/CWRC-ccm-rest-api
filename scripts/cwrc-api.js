@@ -50,11 +50,46 @@ function CwrcEntity(type, url, jq) {
 	}
 
 	this.modifyEntity = function(pid, data) {
+		var result = result;
 
+		jq.ajax({
+			url : url + '/' + type + '/' + pid,
+			type : 'POST',
+			data : {
+				method : 'put',
+				data: data
+			},
+			async : false,
+			success : function(data) {
+				result = data;
+			},
+			error : function(error) {
+				result = error;
+			}
+		});
+
+		return jq.parseJSON(result);
 	}
 
 	this.deleteEntity = function(pid) {
+		var result = result;
 
+		jq.ajax({
+			url : url + '/' + type + "/" + pid,
+			type : 'POST',
+			async : false,
+			data: {
+				method: 'delete'
+			},
+			success : function(data) {
+				result = data;
+			},
+			error : function(error) {
+				result = error;
+			}
+		});
+
+		return jq.parseJSON(result);
 	}
 	
 	this.listEntity = function(totalPerPage, page){

@@ -24,7 +24,30 @@ abstract class EntityController {
 
 		static::createNew($_POST);
 	}
+	
+	protected static function deleteEntity($pid){
+		$url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
+		
+		$header = array("Content-type: application/json");
 
+		foreach (get_login_cookie() as $key => $val) {
+			array_push($header, "Cookie: " . $key . "=" . $val);
+		}
+		
+		$options = array('http' => array('header' => $header, 'method' => 'DELETE', ), );
+		$context = stream_context_create($options);
+		$result = @file_get_contents($url, false, $context);
+
+		if (strpos($http_response_header[0], "200")) {
+			return null;
+		} else {
+			return $http_response_header[0];
+		}
+	}
+
+	/**
+	 * Obtains an entity from the server.
+	 */
 	protected static function getEntity($pid, $content_name) {
 		$url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
 		
@@ -47,16 +70,28 @@ abstract class EntityController {
 		}
 	}
 	
+	/**
+	 * Modifies a currently existing entities content.
+	 */
 	protected static function modifyEntity($content_name, $pid, $data){
 		$result = self::getEntity($pid, $content_name);
 		
 		if(get_class($result) == "Entity"){
-			$result->updateData($data);
+			$successful = $result -> updateData($data);
+			
+			if($successful == null){
+				return $result;
+			}else{
+				return $successful;
+			}
 		}
 		
 		return $result;
 	}
 
+	/**
+	 * Adds a new entity to the server.
+	 */
 	protected static function uploadNewEntity($namespace, $content_name, $entityData) {
 		$url = cwrc_url() . "/islandora/rest/v1/object";
 		$data = array('namespace' => $namespace);
