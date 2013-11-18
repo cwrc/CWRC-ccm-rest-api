@@ -1,6 +1,9 @@
 <?php
 include_once ('./models/entity.php');
 
+/**
+ * Used to handle all entity based functions.
+ */
 abstract class EntityController {
 	abstract public static function search($solrString);
 	abstract public static function view($id);
@@ -8,6 +11,10 @@ abstract class EntityController {
 	abstract public static function update($id);
 	abstract public static function delete($id);
 
+	/**
+	 * Called when the user performs a post command to the entity. If the mthod variable is specified, then the appropriate action is called.
+	 * @param id The id of the entity
+	 */
 	public static function create($id = '') {
 		// Checks if this call has a 'message' parameter. I it does, we need to pass it to the appropriate method.
 		if (isset($_POST["method"])) {
@@ -25,6 +32,10 @@ abstract class EntityController {
 		static::createNew($_POST);
 	}
 	
+	/**
+	 * Helper function used to delete entitties.
+	 * @param pid The id of the entity.
+	 */
 	protected static function deleteEntity($pid){
 		$url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
 		
@@ -47,6 +58,8 @@ abstract class EntityController {
 
 	/**
 	 * Obtains an entity from the server.
+	 * @param pid The identifier of the entity.
+	 * @param content_name The specified name for the content holder of the entity.
 	 */
 	protected static function getEntity($pid, $content_name) {
 		$url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
@@ -71,7 +84,10 @@ abstract class EntityController {
 	}
 	
 	/**
-	 * Modifies a currently existing entities content.
+	 * Modifies a currently existing entities content or creates a new content stream for an entity if it does not exist.
+	 * @param content_name The specified name for the content holder of the entity.
+	 * @param pid The identifier of the entity.
+	 * @param data The content being placed
 	 */
 	protected static function modifyEntity($content_name, $pid, $data){
 		$result = self::getEntity($pid, $content_name);
@@ -91,6 +107,9 @@ abstract class EntityController {
 
 	/**
 	 * Adds a new entity to the server.
+	 * @param namespace The namespace used for the entity.
+	 * @param content_name The specified name for the content holder of the entity.
+	 * @param entityData The content being placed
 	 */
 	protected static function uploadNewEntity($namespace, $content_name, $entityData) {
 		$url = cwrc_url() . "/islandora/rest/v1/object";

@@ -45,25 +45,6 @@ class Entity {
 		return $result;
 	}
 
-	function createFormContent($inputXml, $data) {
-
-		$content = "--" . MULTIPART_BOUNDRY . "\r\n";
-
-		foreach ($data as $key => $val) {
-			$content .= "Content-Disposition: form-data; name=\"" . $key . "\"\r\n\r\n";
-			$content .= $val . "\r\n";
-			$content .= "--" . MULTIPART_BOUNDRY . "\r\n";
-		}
-
-		$content .= "Content-Disposition: form-data; name=\"entity\"; filename=\"entity_data\"\r\n";
-		$content .= "Content-type: text/xml\r\n\r\n";
-		$content .= $inputXml . "\r\n";
-
-		$content .= "--" . MULTIPART_BOUNDRY . "--";
-
-		return $content;
-	}
-
 	function updateData($inputXml) {
 		$header = array();
 		$url = null;
@@ -86,7 +67,7 @@ class Entity {
 			$data = array('versionable' => 'true');
 		}
 
-		$content = $this -> createFormContent($inputXml, $data);
+		$content = cwrc_createFormContent($inputXml, $data);
 		//array_push($header, 'Content-Length: ' . strlen($content));
 
 		$context = stream_context_create(array('http' => array('header' => $header, 'method' => $method, 'content' => $content)));
