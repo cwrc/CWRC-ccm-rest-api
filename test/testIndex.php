@@ -6,10 +6,10 @@ getRoute()->get('/tests/listEntities', array('Tests', 'listEntities'));
 
 class Tests{
 	public static function show_login(){
-		echo "<script src='/scripts/jquery-1.10.2.min.js'></script>";
-		echo "<script src='/scripts/cwrc-api.js'></script>";
+		echo "<script src='" . cwrc_site() . "/scripts/jquery-1.10.2.min.js'></script>";
+		echo "<script src='" . cwrc_site() . "/scripts/cwrc-api.js'></script>";
 		echo "<script type='text/javascript'>";
-		echo "var cwrcApi = new CwrcApi('http://localhost', $)";
+		echo "var cwrcApi = new CwrcApi('" . cwrc_site() . "', $)";
 		echo "</script>";
 		
 		if(count(get_login_cookie()) > 0){
@@ -23,6 +23,12 @@ class Tests{
 			echo "<button onclick='cwrcApi.initializeWithLogin($(\"#loginUsername\").val(), $(\"#loginPassword\").val());location.reload();'>Login</button>";
 			echo "</br>";
 		}
+		
+		/*foreach ($_SERVER as $key => $value) {
+			echo "<p>";
+			echo $key . " == " . $value;
+			echo "</p>";
+		}*/
 	}
 	
 	public static function logout(){
@@ -47,8 +53,8 @@ class Tests{
 		self::show_login();
 		echo "<h1>Cwrc API Tests</h1>";
 		echo "<ul>";
-		echo "<li><a href='/tests/listEntities'>List Entities</a></li>";
-		echo "<li><a href='/tests/addEntity'>Add Entity</a></li>";
+		echo "<li><a href='" . cwrc_site() . "/tests/listEntities'>List Entities</a></li>";
+		echo "<li><a href='" . cwrc_site() . "/tests/addEntity'>Add Entity</a></li>";
 		echo "</ul>";
 	}
 	
@@ -152,7 +158,7 @@ class Tests{
 				if(result.error){
 					alert(result.error);
 				}else{
-					window.location.href = '/tests/viewEntity/' + encodeURIComponent(type) + '/' + encodeURIComponent(result.pid);
+					window.location.href = '" . cwrc_site() . "/tests/viewEntity/' + encodeURIComponent(type) + '/' + encodeURIComponent(result.pid);
 				}
 			}
 		</script>";

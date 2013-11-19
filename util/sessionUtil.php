@@ -4,6 +4,22 @@ function cwrc_url() {
 	return "http://cwrc-dev-01.srv.ualberta.ca";
 }
 
+function cwrc_site() {
+	if(array_key_exists("REDIRECT_URL", $_SERVER)){
+		$pos = strpos($_SERVER["REQUEST_URI"], $_SERVER["REDIRECT_URL"]);
+		
+		if($pos == 0){
+			return "";
+		}
+		
+		$asd = substr($_SERVER["REQUEST_URI"], 0, $pos - 1);
+	
+		return $asd;
+	}else{
+		return substr($_SERVER["REQUEST_URI"], 1);
+	}
+}
+
 function initialize_cookie() {
 	$name = $_POST['name'];
 	

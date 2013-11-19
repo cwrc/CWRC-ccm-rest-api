@@ -23,10 +23,16 @@ class Entity {
 		}
 	}
 
+	/**
+	 * Returns the PID of the current entity.
+	 */
 	function getPID() {
 		return $this -> data -> pid;
 	}
 
+	/**
+	 * Obtains the current text content of the entity.
+	 */
 	function getContent() {
 		$url = cwrc_url() . "/islandora/rest/v1/object/" . urldecode($this -> data -> pid) . "/datastream/" . urldecode($this -> content_name) . "?content=true";
 		$data = array("content" => "true");
@@ -45,6 +51,9 @@ class Entity {
 		return $result;
 	}
 
+	/**
+	 * Updates the current content of the entity.
+	 */
 	function updateData($inputXml) {
 		$header = array();
 		$url = null;
@@ -64,7 +73,7 @@ class Entity {
 		} else {
 			$method = 'PUT';
 			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream/" . $this -> content_name;
-			$data = array('versionable' => 'true');
+			$data = array();
 		}
 
 		$content = cwrc_createFormContent($inputXml, $data);
