@@ -12,7 +12,7 @@ function cwrc_site() {
 			return "";
 		}
 		
-		$asd = substr($_SERVER["REQUEST_URI"], 0, $pos - 1);
+		$asd = substr($_SERVER["REQUEST_URI"], 0, $pos - 2);
 	
 		return $asd;
 	}else{
