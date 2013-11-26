@@ -28,7 +28,7 @@ function CwrcEntity(type, url, jq) {
 				query: '*' + query + '*',
 				start: start,
 				rows: rows
-			}
+			},
 			success : function(data) {
 				result = data;
 			},
