@@ -1,5 +1,5 @@
 <?php
-getRoute()->get('/person/search/(.+)', array('PersonController', 'search'));
+getRoute()->get('/person/search', array('PersonController', 'search'));
 getRoute()->get('/person/(.+)', array('PersonController', 'view'));
 getRoute()->post('/person', array('PersonController', 'create'));
 getRoute()->post('/person/(.+)', array('PersonController', 'create'));
@@ -9,17 +9,12 @@ include_once './controllers/entity.php';
 
 class PersonController extends EntityController {
 	
-	public static function search($solrString){
-		$url = cwrc_url() . "/islandora/rest/v1/solr/select";
-		$options = array(
-			'http' => array(
-				'header'  => "Content-type: application/json\r\n",
-				'method'  => 'GET'
-			),
-		);
+	public static function search(){
+		$query = $_GET['query'];
+		$start = $_GET['start'];
+		$rows = $_GET['rows'];
 		
-		$context  = stream_context_create($options);
-		$result = file_get_contents($url, false, $context);
+		$result = EntityController::searchEntities('PERSON', "*" . $query . "*", $start, $rows);
 		
 		echo($result);
 	}

@@ -9,6 +9,37 @@ function CwrcEntity(type, url, jq) {
 	}
 
 	// Public Functions
+	this.searchEntity = function(query, start, rows){
+		if(!start){
+			start = 0;
+		}
+		
+		if(!rows){
+			end = 400;
+		}
+		
+		var result = result;
+
+		jq.ajax({
+			url : url + '/' + type + "/search",
+			type : 'GET',
+			async : false,
+			data: {
+				query: query,
+				start: start,
+				rows: rows
+			}
+			success : function(data) {
+				result = data;
+			},
+			error : function(error) {
+				result = error;
+			}
+		});
+
+		return result;
+	}
+	
 	this.getEntity = function(pid) {
 		var result = result;
 

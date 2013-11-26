@@ -5,7 +5,7 @@ include_once ('./models/entity.php');
  * Used to handle all entity based functions.
  */
 abstract class EntityController {
-	abstract public static function search($solrString);
+	abstract public static function search();
 	abstract public static function view($id);
 	abstract public static function createNew($data);
 	abstract public static function update($id);
@@ -138,6 +138,24 @@ abstract class EntityController {
 		} else {
 			return $http_response_header[0];
 		}
+	}
+	
+	protected static function searchEntities($content_name, $searchString, $start, $rows){
+		//$queryString = '?q=' . urldecode($searchString) . '%2Bfq=hasDataStream:' . $content_type;
+		$url = cwrc_url() . "/islandora/rest/v1/solr/select";
+		$data = array('q=' . $searchString, 'wt' => 'json', 'start' => $start, 'rows' => $rows, 'fq' => 'hasDatastream:' . $content_type);
+
+		$header = array("Content-type: application/json");
+
+		foreach (get_login_cookie() as $key => $val) {
+			array_push($header, "Cookie: " . $key . "=" . $val);
+		}
+
+		$options = array('http' => array('header' => $header, 'method' => 'GET', 'content' => json_encode($data), ), );
+		$context = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		
+		return $result;
 	}
 
 }

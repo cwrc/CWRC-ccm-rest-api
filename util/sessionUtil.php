@@ -5,7 +5,9 @@ function cwrc_url() {
 }
 
 function cwrc_site() {
-	if(strlen($_SERVER[QUERY_STRING]) > 10){
+	return "http://localhost";
+	
+	/*if(strlen($_SERVER[QUERY_STRING]) > 10){
 		$pos = strpos($_SERVER["REQUEST_URI"], substr($_SERVER["QUERY_STRING"], 10));
 		
 		if($pos == 0){
@@ -17,7 +19,7 @@ function cwrc_site() {
 		return $asd;
 	}else{
 		return substr($_SERVER["REQUEST_URI"], 0, strlen($_SERVER["REQUEST_URI"]) - 1);
-	}
+	}*/
 }
 
 function initialize_cookie() {
