@@ -141,9 +141,9 @@ abstract class EntityController {
 	}
 	
 	protected static function searchEntities($content_name, $searchString, $start, $rows){
-		//$queryString = '?q=' . urldecode($searchString) . '%2Bfq=hasDataStream:' . $content_type;
-		$url = cwrc_url() . "/islandora/rest/v1/solr/select";
-		$data = array('q=' . $searchString, 'wt' => 'json', 'start' => $start, 'rows' => $rows, 'fq' => 'hasDatastream:' . $content_type);
+		//$queryString = urlencode($searchString);
+		$url = cwrc_url() . "/islandora/rest/v1/solr/" . urlencode($searchString);
+		$data = array('wt' => 'json', 'start' => $start, 'rows' => $rows, 'fq' => 'hasDatastream:' . $content_name);
 
 		$header = array("Content-type: application/json");
 

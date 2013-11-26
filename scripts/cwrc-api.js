@@ -25,7 +25,7 @@ function CwrcEntity(type, url, jq) {
 			type : 'GET',
 			async : false,
 			data: {
-				query: query,
+				query: '*' + query + '*',
 				start: start,
 				rows: rows
 			}

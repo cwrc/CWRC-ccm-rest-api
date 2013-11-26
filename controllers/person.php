@@ -14,7 +14,7 @@ class PersonController extends EntityController {
 		$start = $_GET['start'];
 		$rows = $_GET['rows'];
 		
-		$result = EntityController::searchEntities('PERSON', "*" . $query . "*", $start, $rows);
+		$result = EntityController::searchEntities('PERSON', $query, $start, $rows);
 		
 		echo($result);
 	}
