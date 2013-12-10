@@ -9,13 +9,13 @@ function CwrcEntity(type, url, jq) {
 	}
 
 	// Public Functions
-	this.searchEntity = function(query, start, rows){
-		if(!start){
-			start = 0;
+	this.searchEntity = function(query, limit, page){
+		if(!limit){
+			limit = 100;
 		}
 		
-		if(!rows){
-			end = 400;
+		if(!page){
+			page = 0;
 		}
 		
 		var result = result;
@@ -26,8 +26,8 @@ function CwrcEntity(type, url, jq) {
 			async : false,
 			data: {
 				query: '*' + query + '*',
-				start: start,
-				rows: rows
+				limit: limit,
+				page: page
 			},
 			success : function(data) {
 				result = data;
@@ -210,7 +210,23 @@ function CwrcApi(url, jq) {
 	}
 
 	this.logout = function() {
-		alert("Logout not yet implemented.");
+		var result = result;
+
+		if (!_this.isInitialized()) {
+			jq.ajax({
+				url : url + "logout",
+				type : 'POST',
+				async : false,
+				success : function(data) {
+					result = data;
+				},
+				error : function(error) {
+					result = error;
+				}
+			});
+		}
+
+		return result;
 	}
 
 	return this;

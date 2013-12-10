@@ -140,10 +140,10 @@ abstract class EntityController {
 		}
 	}
 	
-	protected static function searchEntities($content_name, $searchString, $start, $rows){
+	protected static function searchEntities($content_name, $searchString, $limit, $page){
 		//$queryString = urlencode($searchString);
 		$url = cwrc_url() . "/islandora/rest/v1/solr/" . urlencode($searchString);
-		$data = array('wt' => 'json', 'start' => $start, 'rows' => $rows, 'fq' => 'hasDatastream:' . $content_name);
+		$data = array('q' => $searchString, 'wt' => 'json', 'limit' => $limit, 'page' => $page, 'fq' => 'hasDatastream:' . $content_name);
 
 		$header = array("Content-type: application/json");
 
@@ -154,7 +154,7 @@ abstract class EntityController {
 		$options = array('http' => array('header' => $header, 'method' => 'GET', 'content' => json_encode($data), ), );
 		$context = stream_context_create($options);
 		$result = file_get_contents($url, false, $context);
-		
+		log.error_log($url);
 		return $result;
 	}
 

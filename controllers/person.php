@@ -11,10 +11,10 @@ class PersonController extends EntityController {
 	
 	public static function search(){
 		$query = $_GET['query'];
-		$start = $_GET['start'];
-		$rows = $_GET['rows'];
+		$limit = $_GET['limit'];
+		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities('PERSON', $query, $start, $rows);
+		$result = EntityController::searchEntities('PERSON', $query, $limit, $page);
 		
 		echo($result);
 	}
