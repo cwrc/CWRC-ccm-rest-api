@@ -25,12 +25,12 @@ function CwrcEntity(type, url, jq) {
 			type : 'GET',
 			async : false,
 			data: {
-				query: '*' + query + '*',
+				query: query,
 				limit: limit,
 				page: page
 			},
 			success : function(data) {
-				result = data;
+				result = JSON.parse(data);
 			},
 			error : function(error) {
 				result = error;

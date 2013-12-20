@@ -9,6 +9,38 @@ include_once './controllers/entity.php';
 
 class PersonController extends EntityController {
 	
+	private static function getLabel($data){
+		// This assumes that the person object is properly formed.
+		
+		$xmlObj = simplexml_load_string($data);
+		$nameParts = $xmlObj->person[0]->identity[0]->preferredForm[0]->namePart;
+		$surname = "";
+		$forename = "";
+		
+		foreach($nameParts as $namePart){
+			if(strcmp($namePart['partType'], "surname") == 0){
+				$surname = $surname . " " . $namePart;
+			}else if(strcmp($namePart['partType'], "forename") == 0){
+				$forename = $forename . " " . $namePart;
+			}else{
+				$surname = $surname . " " . $namePart;
+			}
+		}
+		
+		trim($surname);
+		trim($forename);
+		
+		if(strlen($forename) > 0){
+			if(strlen($surname) > 0){
+				return $surname . ", " . $forename;
+			}else{
+				return $forename;
+			}
+		}
+		
+		return $surname;
+	}
+	
 	public static function search(){
 		$query = $_GET['query'];
 		$limit = $_GET['limit'];
@@ -30,7 +62,7 @@ class PersonController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'PERSON', $data['data']);
+		$result = EntityController::uploadNewEntity('cwrc', 'PERSON', $data['data'], static::getLabel($data['data']));
 		$object = array();
 		
 		if(get_class($result) == "Entity"){
@@ -70,3 +102,5 @@ class PersonController extends EntityController {
 		echo json_encode($object);
 	}
 }
+
+?>

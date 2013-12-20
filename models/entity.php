@@ -29,6 +29,10 @@ class Entity {
 	function getPID() {
 		return $this -> data -> pid;
 	}
+	
+	function getLabel() {
+		return $this -> data -> label;
+	}
 
 	/**
 	 * Obtains the current text content of the entity.

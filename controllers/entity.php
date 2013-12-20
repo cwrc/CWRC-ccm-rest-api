@@ -61,7 +61,7 @@ abstract class EntityController {
 	 * @param pid The identifier of the entity.
 	 * @param content_name The specified name for the content holder of the entity.
 	 */
-	protected static function getEntity($pid, $content_name) {
+	public static function getEntity($pid, $content_name) {
 		$url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
 		
 		$header = array("Content-type: application/json");
@@ -111,9 +111,9 @@ abstract class EntityController {
 	 * @param content_name The specified name for the content holder of the entity.
 	 * @param entityData The content being placed
 	 */
-	protected static function uploadNewEntity($namespace, $content_name, $entityData) {
+	protected static function uploadNewEntity($namespace, $content_name, $entityData, $label) {
 		$url = cwrc_url() . "/islandora/rest/v1/object";
-		$data = array('namespace' => $namespace);
+		$data = array('namespace' => $namespace, 'label' => $label);
 
 		$header = array("Content-type: application/json");
 
@@ -142,8 +142,8 @@ abstract class EntityController {
 	
 	protected static function searchEntities($content_name, $searchString, $limit, $page){
 		//$queryString = urlencode($searchString);
-		$url = cwrc_url() . "/islandora/rest/v1/solr/" . urlencode($searchString);
-		$data = array('q' => $searchString, 'wt' => 'json', 'limit' => $limit, 'page' => $page, 'filter' => 'hasDatastream:' . $content_name);
+		$url = cwrc_url() . "/islandora/rest/v1/solr/" . urlencode($searchString) . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=" . urlencode("hasDatastream:" . $content_name);
+		$data = array();
 
 		$header = array("Content-type: application/json");
 
@@ -154,8 +154,10 @@ abstract class EntityController {
 		$options = array('http' => array('header' => $header, 'method' => 'GET', 'content' => json_encode($data), ), );
 		$context = stream_context_create($options);
 		$result = file_get_contents($url, false, $context);
-		log.error_log($url);
+		
 		return $result;
 	}
 
 }
+
+?>

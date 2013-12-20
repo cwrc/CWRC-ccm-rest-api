@@ -60,11 +60,13 @@ class Tests{
 	
 	public static function viewEntity($type, $pid){
 		self::show_login();
+		$entity = EntityController::getEntity($pid, $type);
 		
 		echo "<h1>View Entity</h1>";
 		
 		echo "<h2>Type: " . htmlspecialchars($type) . "</h2>";
 		echo "<h2>PID: " . htmlspecialchars($pid) . "</h2>";
+		echo "<h2>Label: " . htmlspecialchars($entity->getLabel()) . "</h2>";
 		
 		echo "<h2>Content</h2>";
 		echo "<textarea id='entityContent' name='data'></textarea>";
@@ -110,10 +112,12 @@ class Tests{
 		echo "<h1>List Entities</h1>";
 		
 		echo "<h2>Type:</h2>";
-		echo "<select id='entityType' onchange='selectChanged()'>";
+		echo "<select id='entityType'>";
 		echo "<option></option>";
 		echo "<option value='person'>Person</option>";
 		echo "</select>";
+		echo "<div>Search:&nbsp<input id='searchText'/></div>";
+		echo "<button onclick='search()'>Search</button>";
 		
 		echo "<br/>";
 		
@@ -126,14 +130,34 @@ class Tests{
 		echo "</table>";
 		
 		echo "<script type='text/javascript'>
-			function selectChanged(){
-				alert('changed');
+			function search(){
+				var searchText = $('#searchText').val();
+				var entity = $('#entityType').val();
+				
+				var result = cwrcApi[entity].searchEntity(searchText);
 			}
 		</script>";
 	}
 	
 	public static function addEntity(){
+		$examplePerson = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+		<entity>
+			<person>
+				<recordInfo>
+				</recordInfo>
+				<identity>
+					<preferredForm>
+						<namePart>Test Person</namePart>
+					</preferredForm>
+				</identity>
+				<description>
+				</description>
+			</person>
+		</entity>";
+		$examplePerson = htmlspecialchars($examplePerson, ENT_QUOTES, ISO-8859-1, false);
+		
 		self::show_login();
+		
 		echo "<h1>Add Entity</h1>";
 		
 		echo "<div>";
@@ -144,7 +168,7 @@ class Tests{
 		echo "</div>";
 		
 		echo "<div>";
-		echo "<textarea id='entityData' name='data'></textarea>";
+		echo "<textarea id='entityData' name='data'>" . $examplePerson . "</textarea>";
 		echo "</div>";
 		
 		echo "<button onclick='submitEntity();'>Submit</button>";
@@ -153,6 +177,7 @@ class Tests{
 			function submitEntity(){
 				var type = $('#entityType').val();
 				var val = $('#entityData').val();
+				
 				var result = cwrcApi[type].newEntity(val);
 			
 				if(result.error){
