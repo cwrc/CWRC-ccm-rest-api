@@ -140,9 +140,24 @@ abstract class EntityController {
 		}
 	}
 	
+	protected static function buildQueryString($searchString){
+		if(preg_match('/^(["\']).*\1$/m', $searchString)){
+			return urlencode($searchString);
+		}
+		
+		$returnString = "";
+		$explosion = explode("*", $searchString);
+		
+		foreach($explosion as $value){
+			$returnString .= urlencode($value) . "*";
+		}
+		
+		return $returnString;
+	}
+	
 	protected static function searchEntities($content_name, $searchString, $limit, $page){
-		//$queryString = urlencode($searchString);
-		$url = cwrc_url() . "/islandora/rest/v1/solr/" . urlencode($searchString) . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=" . urlencode("hasDatastream:" . $content_name);
+		$queryString = self::buildQueryString($searchString);
+		$url = cwrc_url() . "/islandora/rest/v1/solr/fgs.label:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=" . urlencode("hasDatastream:" . $content_name);
 		$data = array();
 
 		$header = array("Content-type: application/json");

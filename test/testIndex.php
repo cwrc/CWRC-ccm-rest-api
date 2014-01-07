@@ -123,18 +123,49 @@ class Tests{
 		
 		echo "<h2>Entities</h2>";
 		echo "<table>";
-		echo "<tr>
+		echo "<thead><tr>
 			<th>PID</th>
+			<th>Label</th>
 			<th>Action</th>
-		<tr>";
+		</tr></thead>";
+		echo "<tbody id='table_body'></tbody>";
 		echo "</table>";
 		
 		echo "<script type='text/javascript'>
 			function search(){
 				var searchText = $('#searchText').val();
 				var entity = $('#entityType').val();
+				var key;
 				
 				var result = cwrcApi[entity].searchEntity(searchText);
+				$('#table_body').empty();
+				
+				if(!result.response){
+					alert(result);
+				}
+				
+				var objects = result.response.objects;
+				
+				for(key in objects){
+					var object = objects[key];
+					var row = $('<tr></tr>');
+					
+					var data = $('<td></td>');
+					data.text(object.PID);
+					row.append(data);
+					
+					var data = $('<td></td>');
+					if(object.solr_doc['dc.title']){
+						data.text(object.solr_doc['fgs.label'][0]);
+					}
+					row.append(data);
+					
+					var data = $('<td></td>');
+					data.append('<a href=\"" . cwrc_site() . "/tests/viewEntity/' + entity + '/' + encodeURIComponent(object.PID) + '\">View</a>');
+					row.append(data);
+					
+					$('#table_body').append(row);
+				}
 			}
 		</script>";
 	}
