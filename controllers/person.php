@@ -8,6 +8,7 @@ getRoute()->delete('/person/(.+)', array('PersonController', 'delete'));
 include_once './controllers/entity.php';
 
 class PersonController extends EntityController {
+	const PERSON = "PERSON";
 	
 	private static function getLabel($data){
 		// This assumes that the person object is properly formed.
@@ -46,15 +47,15 @@ class PersonController extends EntityController {
 		$limit = $_GET['limit'];
 		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities('PERSON', $query, $limit, $page);
+		$result = EntityController::searchEntities(self::PERSON, $query, $limit, $page);
 		
 		echo($result);
 	}
 	
 	public static function view($id){
-		$result = EntityController::getEntity($id, 'PERSON');
+		$result = EntityController::getEntity($id, self::PERSON);
 		
-		if(get_class($result) == "Entity"){
+		if(get_class($result) == self::ENTITY){
 			echo $result->getContent();
 		}else{
 			echo $result;
@@ -62,10 +63,10 @@ class PersonController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'PERSON', $data['data'], static::getLabel($data['data']));
+		$result = EntityController::uploadNewEntity(self::API_NAMESPACE, self::PERSON, $data['data'], static::getLabel($data['data']));
 		$object = array();
 		
-		if(get_class($result) == "Entity"){
+		if(get_class($result) == self::ENTITY){
 			$object["pid"] = $result->getPID();
 		}else{
 			$object["error"] = $result;
@@ -75,10 +76,10 @@ class PersonController extends EntityController {
 	}
 	
 	public static function update($id){
-		$result = EntityController::modifyEntity('PERSON', $id, $_POST['data']);
+		$result = EntityController::modifyEntity(self::PERSON, $id, $_POST['data']);
 		$object = array();
 		
-		if(get_class($result) == "Entity"){
+		if(get_class($result) == self::ENTITY){
 			$object["pid"] = $result->getPID();
 		}else{
 			$object["pid"] = $id;

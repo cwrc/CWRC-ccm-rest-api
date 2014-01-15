@@ -5,6 +5,9 @@ include_once ('./models/entity.php');
  * Used to handle all entity based functions.
  */
 abstract class EntityController {
+	const ENTITY = "Entity";
+	const API_NAMESPACE = "cwrc";
+	
 	abstract public static function search();
 	abstract public static function view($id);
 	abstract public static function createNew($data);
@@ -92,7 +95,7 @@ abstract class EntityController {
 	protected static function modifyEntity($content_name, $pid, $data){
 		$result = self::getEntity($pid, $content_name);
 		
-		if(get_class($result) == "Entity"){
+		if(get_class($result) == self::ENTITY){
 			$successful = $result -> updateData($data);
 			
 			if($successful == null){
