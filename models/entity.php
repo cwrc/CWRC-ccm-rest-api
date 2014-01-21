@@ -75,9 +75,9 @@ class Entity {
 			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream";
 			$data = array('dsid' => $this -> content_name, 'mimeType' => 'text/xml', 'label' => 'Entity Data', 'controlGroup' => 'M');
 		} else {
-			$method = 'PUT';
+			$method = 'POST';
 			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream/" . $this -> content_name;
-			$data = array();
+			$data = array('method' => 'PUT');
 		}
 
 		$content = cwrc_createFormContent($inputXml, $data);

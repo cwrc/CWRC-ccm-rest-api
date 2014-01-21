@@ -1,7 +1,0 @@
-RewriteEngine on
-RewriteLogLevel 9
-RewriteLog "/tmp/rewrite.log"
-RewriteLogLevel 9
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)\?*$ index.php?__route__=/$1 [L,QSA]
