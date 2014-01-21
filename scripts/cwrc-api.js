@@ -9,7 +9,7 @@ function CwrcEntity(type, url, jq) {
 	}
 
 	// Public Functions
-	this.searchEntity = function(query, limit, page){
+	this.searchEntity = function(query, callback_func, limit, page){
 		if(!limit){
 			limit = 100;
 		}
@@ -18,12 +18,18 @@ function CwrcEntity(type, url, jq) {
 			page = 0;
 		}
 		
-		var result = result;
+		var isAsync = false;
+		
+		if(callback_func && callback_func != null){
+			isAsync = true;
+		}
+		
+		var result = callback_func;
 
 		jq.ajax({
 			url : url + '/' + type + "/search",
 			type : 'GET',
-			async : false,
+			async : isAsync,
 			data: {
 				query: query,
 				limit: limit,
@@ -31,9 +37,17 @@ function CwrcEntity(type, url, jq) {
 			},
 			success : function(data) {
 				result = JSON.parse(data);
+				
+				if(isAsync){
+					callback_func(result);
+				}
 			},
 			error : function(error) {
 				result = error;
+				
+				if(isAsync){
+					callback_func(result);
+				}
 			}
 		});
 

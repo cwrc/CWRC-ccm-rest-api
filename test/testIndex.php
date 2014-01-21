@@ -139,15 +139,11 @@ class Tests{
 		echo "</table>";
 		
 		echo "<script type='text/javascript'>
-			function search(){
+			function searchResult(result){
 				var searchText = $('#searchText').val();
 				var entity = $('#entityType').val();
 				var key;
 				
-                
-               
-                
-				var result = cwrcApi[entity].searchEntity(searchText);
 				$('#table_body').empty();
 				
 				if(!result.response){
@@ -176,6 +172,15 @@ class Tests{
 					
 					$('#table_body').append(row);
 				}
+			}
+			
+			function search(){
+				var searchText = $('#searchText').val();
+				var entity = $('#entityType').val();
+				var key;
+				
+                
+				var result = cwrcApi[entity].searchEntity(searchText, searchResult);
 			}
 		</script>";
 	}
