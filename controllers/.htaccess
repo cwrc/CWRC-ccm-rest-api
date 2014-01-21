@@ -1,4 +1,5 @@
 RewriteEngine on
+RewriteLogLevel 9
 RewriteLog "/tmp/rewrite.log"
 RewriteLogLevel 9
 RewriteCond %{REQUEST_FILENAME} !-f
