@@ -112,10 +112,17 @@ class Tests{
 		echo "<h1>List Entities</h1>";
 		
 		echo "<h2>Type:</h2>";
-		echo "<select id='entityType'>";
-		echo "<option></option>";
-		echo "<option value='person'>Person</option>";
-		echo "</select>";
+			
+		
+        echo "<select id='entityType' >";
+        echo "<option></option>";
+        echo "<option value='person'>Person</option>";
+        echo "<option value='place'>Place</option>";
+        echo "<option value='organization'>Organization</option>";
+        echo "<option value='title'>Title</option>";
+        echo "</select>";
+		
+		
 		echo "<div>Search:&nbsp<input id='searchText'/></div>";
 		echo "<button onclick='search()'>Search</button>";
 		
@@ -137,6 +144,9 @@ class Tests{
 				var entity = $('#entityType').val();
 				var key;
 				
+                
+               
+                
 				var result = cwrcApi[entity].searchEntity(searchText);
 				$('#table_body').empty();
 				
@@ -171,6 +181,7 @@ class Tests{
 	}
 	
 	public static function addEntity(){
+	    
 		$examplePerson = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 		<entity>
 			<person>
@@ -185,7 +196,60 @@ class Tests{
 				</description>
 			</person>
 		</entity>";
-		$examplePerson = htmlspecialchars($examplePerson, ENT_QUOTES, ISO-8859-1, false);
+		$examplePerson = json_encode($examplePerson);//htmlspecialchars($examplePerson, ENT_QUOTES, ISO-8859-1, false);
+        
+        $examplePlace = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <entity>
+            <place>
+                <recordInfo>
+                </recordInfo>
+                <identity>
+                    <preferredForm>
+                        <namePart>Test Place</namePart>
+                    </preferredForm>
+                </identity>
+                <description>
+                </description>
+            </place>
+        </entity>";
+        $examplePlace = json_encode($examplePlace);//htmlspecialchars($examplePlace, ENT_QUOTES, ISO-8859-1, false);
+        
+        
+        $exampleOrganization = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <entity>
+            <organization>
+                <recordInfo>
+                </recordInfo>
+                <identity>
+                    <preferredForm>
+                        <namePart>Test Organization</namePart>
+                    </preferredForm>
+                </identity>
+                <description>
+                </description>
+            </organization>
+        </entity>";
+        $exampleOrganization = json_encode($exampleOrganization);//htmlspecialchars($exampleOrganization, ENT_QUOTES, ISO-8859-1, false);
+        
+        $exampleTitle = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <entity>
+            <title>
+                <recordInfo>
+                </recordInfo>
+                <identity>
+                    <preferredForm>
+                        <namePart>Test Title</namePart>
+                    </preferredForm>
+                </identity>
+                <description>
+                </description>
+            </title>
+        </entity>";
+        $exampleTitle = json_encode($exampleTitle);//htmlspecialchars($exampleTitle, ENT_QUOTES, ISO-8859-1, false);
+        
+        
+        $noSelection = "Select type for appropriate XML template";
+        $noSelection = htmlspecialchars($noSelection, ENT_QUOTES, ISO-8859-1, false);
 		
 		self::show_login();
 		
@@ -193,21 +257,61 @@ class Tests{
 		
 		echo "<div>";
 		echo "<span class='label'>Entity Type</span>";
-		echo "<select id='entityType'>";
+		echo "<select id='entityType'onChange='updateText();' >";
+        echo "<option value='select type'>selecttype</option>";
 		echo "<option value='person'>Person</option>";
+        echo "<option value='place'>Place</option>";
+        echo "<option value='organization'>Organization</option>";
+        echo "<option value='title'>Title</option>";
 		echo "</select>";
 		echo "</div>";
 		
 		echo "<div>";
-		echo "<textarea id='entityData' name='data'>" . $examplePerson . "</textarea>";
+		echo "<textarea id='entityData' name='data'>" . $noSelection  . "</textarea>";
 		echo "</div>";
 		
 		echo "<button onclick='submitEntity();'>Submit</button>";
 		
 		echo "<script type='text/javascript'>
+		
+		     
+		     function updateText(){
+                 
+                 var cwrctypemobj = document.getElementById('entityType');
+                 var cwrctypetext = cwrctypemobj.options[cwrctypemobj.selectedIndex].text;
+                
+                 //document.getElementById('entityData').value = cwrctypetext;
+                 //document.getElementById('entityData').value = 'blah';
+                 
+             switch (cwrctypetext)
+                 {
+                   case 'Person':
+                   document.getElementById('entityData').value = " .$examplePerson . ";
+                   break;
+                   
+                   case 'Place':
+                   document.getElementById('entityData').value = " .$examplePlace . ";
+                   break;
+                   
+                   case 'Organization':
+                   document.getElementById('entityData').value = " .$exampleOrganization . ";
+                   break;
+                   
+                   case 'Title':
+                   document.getElementById('entityData').value = " .$exampleTitle . ";
+                   break;
+                         
+                 }             
+
+
+             
+             }
+             
+		
 			function submitEntity(){
 				var type = $('#entityType').val();
 				var val = $('#entityData').val();
+                
 				
 				var result = cwrcApi[type].newEntity(val);
 			
