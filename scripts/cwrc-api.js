@@ -9,49 +9,28 @@ function CwrcEntity(type, url, jq) {
 	}
 
 	// Public Functions
-	this.searchEntity = function(query, callback_func, limit, page){
-		if(!limit){
-			limit = 100;
-		}
-		
-		if(!page){
-			page = 0;
-		}
-		
-		var isAsync = false;
-		
-		if(callback_func && callback_func != null){
-			isAsync = true;
-		}
-		
-		var result = callback_func;
+	this.searchEntity = function(searchObject){
+		var limit = searchObject.limit !== undefined ? searchObject.limit : 100;
+		var page = searchObject.page !== undefined ? searchObject.page : 0;
 
-		jq.ajax({
+		return jq.ajax({
 			url : url + '/' + type + "/search",
 			type : 'GET',
-			async : isAsync,
+			async : true,
 			data: {
-				query: query,
+				query: searchObject.query,
 				limit: limit,
 				page: page
 			},
 			success : function(data) {
-				result = JSON.parse(data);
+				result = data === "" ? {} : JSON.parse(data);
 				
-				if(isAsync){
-					callback_func(result);
-				}
+				searchObject.success_func(result);
 			},
 			error : function(error) {
-				result = error;
-				
-				if(isAsync){
-					callback_func(result);
-				}
+				searchObject.error_func(error);
 			}
 		});
-
-		return result;
 	}
 	
 	this.getEntity = function(pid) {

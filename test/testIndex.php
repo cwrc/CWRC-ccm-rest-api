@@ -139,6 +139,10 @@ class Tests{
 		echo "</table>";
 		
 		echo "<script type='text/javascript'>
+			function errorResult(result){
+				alert(result);
+			}
+			
 			function searchResult(result){
 				var searchText = $('#searchText').val();
 				var entity = $('#entityType').val();
@@ -180,7 +184,13 @@ class Tests{
 				var key;
 				
                 
-				var result = cwrcApi[entity].searchEntity(searchText, searchResult);
+				var result = cwrcApi[entity].searchEntity({
+					query: searchText, 
+					success_func: searchResult,
+					error_func: errorResult,
+					limit: 100,
+					page: 0
+				});
 			}
 		</script>";
 	}
