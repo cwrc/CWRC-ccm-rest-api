@@ -25,10 +25,10 @@ function CwrcEntity(type, url, jq) {
 			success : function(data) {
 				result = data === "" ? {} : JSON.parse(data);
 				
-				searchObject.success_func(result);
+				searchObject.success(result);
 			},
 			error : function(error) {
-				searchObject.error_func(error);
+				searchObject.error(error);
 			}
 		});
 	}

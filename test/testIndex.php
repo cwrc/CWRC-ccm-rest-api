@@ -186,8 +186,8 @@ class Tests{
                 
 				var result = cwrcApi[entity].searchEntity({
 					query: searchText, 
-					success_func: searchResult,
-					error_func: errorResult,
+					success: searchResult,
+					error: errorResult,
 					limit: 100,
 					page: 0
 				});
