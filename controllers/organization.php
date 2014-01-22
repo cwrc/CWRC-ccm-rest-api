@@ -15,7 +15,7 @@ class OrganizationController extends EntityController {
 		$xmlObj = simplexml_load_string($data);
 		$nameParts = $xmlObj->organization[0]->identity[0]->preferredForm[0]->namePart;
 		
-		return $nameParts;
+		return $nameParts[0];
 	}
 	
 	public static function search(){
