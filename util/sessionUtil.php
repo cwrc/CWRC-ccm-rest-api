@@ -6,7 +6,7 @@ function cwrc_url() {
 
 function cwrc_site() {
 	// return "http://localhost/cwrc";
-	return "http://localhost/";
+	return "http://localhost/cwrc/";
 	/*if(strlen($_SERVER[QUERY_STRING]) > 10){
 		$pos = strpos($_SERVER["REQUEST_URI"], substr($_SERVER["QUERY_STRING"], 10));
 		
