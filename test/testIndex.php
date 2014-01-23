@@ -14,6 +14,7 @@ class Tests{
 		
 		if(count(get_login_cookie()) > 0){
 			echo "<h4>Logged in as " . $_SESSION['username'] . "</h4>";
+			
 			echo "<button onclick='cwrcApi.logout();location.reload();' value='Logout'>Logout</button>";
 			echo "</form></br>";
 		}else{
@@ -186,7 +187,10 @@ class Tests{
 		<entity>
 			<person>
 				<recordInfo>
-				</recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
+                </recordInfo>
 				<identity>
 					<preferredForm>
 						<namePart>Test Person</namePart>
@@ -202,6 +206,9 @@ class Tests{
         <entity>
             <place>
                 <recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
                 </recordInfo>
                 <identity>
                     <preferredForm>
@@ -219,6 +226,9 @@ class Tests{
         <entity>
             <organization>
                 <recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
                 </recordInfo>
                 <identity>
                     <preferredForm>
@@ -232,9 +242,12 @@ class Tests{
         $exampleOrganization = json_encode($exampleOrganization);//htmlspecialchars($exampleOrganization, ENT_QUOTES, ISO-8859-1, false);
         
         $exampleTitle = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-        <entity>
+        <mod>
             <title>
                 <recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
                 </recordInfo>
                 <identity>
                     <preferredForm>
@@ -244,7 +257,7 @@ class Tests{
                 <description>
                 </description>
             </title>
-        </entity>";
+        </mods>";
         $exampleTitle = json_encode($exampleTitle);//htmlspecialchars($exampleTitle, ENT_QUOTES, ISO-8859-1, false);
         
         

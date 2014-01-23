@@ -17,9 +17,7 @@ class PlaceController extends EntityController {
 		
         
         return (string)$nameParts; 
-        //print_r('test' );
-        
-		//return $nameParts[0];
+       
         
 	}
 	

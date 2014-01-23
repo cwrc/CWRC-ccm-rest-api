@@ -14,7 +14,7 @@ class TitleController extends EntityController {
 		
 		$xmlObj = simplexml_load_string($data);
 		$nameParts = $xmlObj->title[0]->identity[0]->preferredForm[0]->namePart;
-		
+		// test ofr primary, alternative ...
 		return $nameParts;
 	}
 	
