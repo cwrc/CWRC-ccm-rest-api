@@ -23,7 +23,7 @@ class TitleController extends EntityController {
                 $primeTitle =  (string)$tinfo->title;
                 $primeSet = TRUE;
             }
-        else if (isset($tinfo['type']) && $tinfo[type] = 'alternative') {   //ingore altenatives maybe
+        else if (isset($tinfo['type']) && $tinfo[type] = 'alternative') {   //ingore altenatives, ... maybe
             }
         else {
             $plainTitle = (string)$tinfo->title;
@@ -43,7 +43,7 @@ class TitleController extends EntityController {
 		
 		$result = EntityController::searchEntities('MODS', $query, $limit, $page);
 		
-		return($result);
+		echo($result);
 	}
 	
 	public static function view($id){
