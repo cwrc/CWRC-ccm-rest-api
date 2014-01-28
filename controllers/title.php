@@ -13,9 +13,27 @@ class TitleController extends EntityController {
 		// This assumes that the title object is properly formed.
 		
 		$xmlObj = simplexml_load_string($data);
-		$nameParts = $xmlObj->title[0]->identity[0]->preferredForm[0]->namePart;
-		// test ofr primary, alternative ...
-		return $nameParts;
+        $primeTitle = '';
+        $plainTitle = '';
+        
+        $primeSet = FALSE;
+        
+        foreach ($xmlObj->titleInfo as $tinfo){
+        if (isset($tinfo['usage']) && $tinfo[usage] = 'Primary') {   // check for primary title
+                $primeTitle =  (string)$tinfo->title;
+                $primeSet = TRUE;
+            }
+        else if (isset($tinfo['type']) && $tinfo[type] = 'alternative') {   //ingore altenatives maybe
+            }
+        else {
+            $plainTitle = (string)$tinfo->title;
+             }
+        } //for each $tinfo
+
+        if ($primeSet) {return $primeTitle;}
+         else    
+        {return $plainTitle;}
+   
 	}
 	
 	public static function search(){
@@ -25,7 +43,7 @@ class TitleController extends EntityController {
 		
 		$result = EntityController::searchEntities('MODS', $query, $limit, $page);
 		
-		echo($result);
+		return($result);
 	}
 	
 	public static function view($id){

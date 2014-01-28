@@ -256,22 +256,12 @@ class Tests{
         </entity>";
         $exampleOrganization = json_encode($exampleOrganization);//htmlspecialchars($exampleOrganization, ENT_QUOTES, ISO-8859-1, false);
         
-        $exampleTitle = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-        <mod>
-            <title>
-                <recordInfo>
-                    <originInfo>
-                                <projectId>record for testing API</projectId>
-                    </originInfo>
-                </recordInfo>
-                <identity>
-                    <preferredForm>
-                        <namePart>Test Title</namePart>
-                    </preferredForm>
-                </identity>
-                <description>
-                </description>
-            </title>
+        $exampleTitle = "<mods>
+        <titleInfo>
+            <title>the titles tests</title>
+        </titleInfo>
+        <recordInfo>
+        </recordInfo>
         </mods>";
         $exampleTitle = json_encode($exampleTitle);//htmlspecialchars($exampleTitle, ENT_QUOTES, ISO-8859-1, false);
         
