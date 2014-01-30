@@ -155,7 +155,7 @@ abstract class EntityController {
 			$returnString .= urlencode($value) . "*";
 		}
 		
-		return strtolower($returnString);
+		return "(" . strtolower($returnString) . ")";
 	}
 	
 	protected static function searchEntities($content_name, $searchString, $limit, $page){
