@@ -42,6 +42,8 @@ class Entity {
 		$data = array("content" => "true");
 
 		$header = array("Content-type: application/json");
+		
+		
 
 		foreach (get_login_cookie() as $key => $val) {
 			array_push($header, "Cookie: " . $key . "=" . $val);
@@ -54,6 +56,51 @@ class Entity {
 
 		return $result;
 	}
+	
+	function setRelationship($uri, $predicate, $entityModel) {
+		$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/relationship";
+		$data = array('uri' => $uri, 'predicate' => $predicate, 'object' => $entityModel, 'type' => 'uri');
+		$header = array();
+		
+		foreach (get_login_cookie() as $key => $val) {
+			array_push($header, "Cookie: " . $key . "=" . $val);
+		}
+		
+		array_push($header, "Content-type: application/json");
+		
+		$options = array('http' => array('header' => $header, 'method' => 'POST', 'content' => json_encode($data), ), );
+		$context = stream_context_create($options);
+		$result = @file_get_contents($url, false, $context);
+		
+		if (strpos($http_response_header[0], "201")) {
+			return null;
+		}else {
+			return $url . " - " . $http_response_header[0] . "\n" . $result;
+		}
+	}
+	
+	/*function setRelationship($uri, $predicate, $entiyyModel) {
+		$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/relationship";
+		$data = array('uri' => $uri, 'predicate' => $predicate, 'object' => $entiyyModel, 'literal' => 'false');
+		$header = array();
+		
+		foreach (get_login_cookie() as $key => $val) {
+			array_push($header, "Cookie: " . $key . "=" . $val);
+		}
+		
+		array_push($header, 'Content-Type: multipart/form-data; boundary=' . MULTIPART_BOUNDRY);
+		
+		
+		$content = cwrc_createFormContent($entityModel, $data);
+		$context = stream_context_create(array('http' => array('header' => $header, 'method' => 'POST', 'content' => $content)));
+		$result = @file_get_contents($url, false, $context);
+		
+		if (strpos($http_response_header[0], "201")) {
+			return null;
+		}else {
+			return $url . " - " . $http_response_header[0];
+		}
+	}*/
 
 	/**
 	 * Updates the current content of the entity.

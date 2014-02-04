@@ -9,6 +9,7 @@ include_once './controllers/entity.php';
 
 class PersonController extends EntityController {
 	const PERSON = "PERSON";
+	const MODEL = "cwrc:person-entityCModel";
 	
 	private static function getLabel($data){
 		// This assumes that the person object is properly formed.
@@ -63,7 +64,7 @@ class PersonController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity(self::API_NAMESPACE, self::PERSON, $data['data'], static::getLabel($data['data']));
+		$result = EntityController::uploadNewEntity(self::API_NAMESPACE, self::PERSON, $data['data'], static::getLabel($data['data']), self::MODEL);
 		$object = array();
 		
 		if(get_class($result) == self::ENTITY){
