@@ -42,7 +42,7 @@ class PlaceController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'PLACE', $data['data'], static::getLabel($data['data']));
+		$result = EntityController::uploadNewEntity('cwrc', 'PLACE', $data['data'], static::getLabel($data['data']), "cwrc:place-entityCModel");
 		$object = array();
 		
 		if(get_class($result) == "Entity"){

@@ -57,7 +57,7 @@ class TitleController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'MODS', $data['data'], static::getLabel($data['data']));
+		$result = EntityController::uploadNewEntity('cwrc', 'MODS', $data['data'], static::getLabel($data['data']), "cwrc:title-entityCModel");
 		$object = array();
 		
 		if(get_class($result) == "Entity"){

@@ -41,7 +41,7 @@ class OrganizationController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'ORGANIZATION', $data['data'], static::getLabel($data['data']));
+		$result = EntityController::uploadNewEntity('cwrc', 'ORGANIZATION', $data['data'], static::getLabel($data['data']), "cwrc:organization-entityCModel");
 		$object = array();
 		
 		if(get_class($result) == "Entity"){
