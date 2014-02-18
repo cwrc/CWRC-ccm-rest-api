@@ -48,7 +48,7 @@ class PersonController extends EntityController {
 		$limit = $_GET['limit'];
 		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities(self::PERSON, $query, $limit, $page);
+		$result = EntityController::searchEntities(self::MODEL, $query, $limit, $page);
 		
 		echo($result);
 	}

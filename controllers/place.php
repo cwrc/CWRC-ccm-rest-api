@@ -26,7 +26,7 @@ class PlaceController extends EntityController {
 		$limit = $_GET['limit'];
 		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities('PLACE', $query, $limit, $page);
+		$result = EntityController::searchEntities("cwrc:place-entityCModel", $query, $limit, $page);
 		
 		echo($result);
 	}

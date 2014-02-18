@@ -160,9 +160,9 @@ abstract class EntityController {
 		return "(" . strtolower($returnString) . ")";
 	}
 	
-	protected static function searchEntities($content_name, $searchString, $limit, $page){
+	protected static function searchEntities($entityModel, $searchString, $limit, $page){
 		$queryString = self::buildQueryString($searchString);
-		$url = cwrc_url() . "/islandora/rest/v1/solr/fgs.label:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=" . urlencode("hasDatastream:" . $content_name);// . '&sort="fgs.label"+asc';
+		$url = cwrc_url() . "/islandora/rest/v1/solr/fgs.label:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=rels.hasModel:" . str_replace(array(":"), "%5C:", $entityModel);// . '&sort="fgs.label"+asc';
 		$data = array();
 
 		$header = array("Content-type: application/json");

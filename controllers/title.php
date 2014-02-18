@@ -41,7 +41,7 @@ class TitleController extends EntityController {
 		$limit = $_GET['limit'];
 		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities('MODS', $query, $limit, $page);
+		$result = EntityController::searchEntities("cwrc:title-entityCModel", $query, $limit, $page);
 		
 		echo($result);
 	}
