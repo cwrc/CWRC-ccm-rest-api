@@ -1,5 +1,7 @@
 <?php
 
+define('MULTIPART_BOUNDRY', md5(time()));
+
 function cwrc_url() {
 	return "http://cwrc-dev-01.srv.ualberta.ca";
 }
