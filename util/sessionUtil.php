@@ -69,6 +69,11 @@ function get_login_cookie() {
 	foreach ($eachCookie as $val) {
 		if (strlen($val) > 0) {
 			$parts = explode('=', $val);
+			
+			if(strpos($parts[0], "DRUPALCHAT") === 0){
+				continue;	
+			}
+			
 			$cookies[$parts[0]] = $parts[1];
 		}
 	}

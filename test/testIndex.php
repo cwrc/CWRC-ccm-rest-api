@@ -13,7 +13,7 @@ class Tests{
 		echo "</script>";
 		
 		if(count(get_login_cookie()) > 0){
-			echo "<h4>Logged in as " . $_SESSION['username'] . "</h4>";
+			//echo "<h4>Logged in as " . $_SESSION['username'] . "</h4>";
 			
 			echo "<button onclick='cwrcApi.logout();location.reload();' value='Logout'>Logout</button>";
 			echo "</form></br>";
@@ -32,7 +32,7 @@ class Tests{
 		}*/
 	}
 	
-	public static function logout(){
+	/*public static function logout(){
 		cwrc_logout();
 		
 		$_SESSION['username'] = null;
@@ -48,7 +48,7 @@ class Tests{
 		
 		$_SESSION['username'] = $username;
 		header('location: ' . $_SERVER['HTTP_REFERER']);
-	}
+	}*/
 	
 	public static function home(){
 		self::show_login();
