@@ -1,5 +1,6 @@
 <?php
 
+define('CWRC_COOKIE', 'cwrc_api');
 define('MULTIPART_BOUNDRY', md5(time()));
 
 function cwrc_url() {
@@ -36,7 +37,8 @@ function initialize_cookie() {
 		}
 	}
 
-	setcookie('cwrc-api', $name . '=' . $cookie, 0, '/');
+	//setcookie(CWRC_COOKIE, $name . '=' . $cookie, 0, '/');
+	$_SESSION[CWRC_COOKIE] = $cookies;
 }
 
 function initialize_user() {
@@ -58,13 +60,13 @@ function cwrc_login($username, $password) {
 		}
 	}
 
-	setcookie('cwrc-api', $cookies, 0, '/');
-	//$_SERVER['HTTP_COOKIE'] = $result;
+	//setcookie(CWRC_COOKIE, $cookies, 0, '/');
+	$_SESSION[CWRC_COOKIE] = $cookies;
 }
 
 function get_login_cookie() {
 	$cookies = array();
-	$eachCookie = explode(';', $_COOKIE['cwrc-api']);
+	$eachCookie = explode(';', $_SESSION[CWRC_COOKIE]);
 
 	foreach ($eachCookie as $val) {
 		if (strlen($val) > 0) {
@@ -82,7 +84,8 @@ function get_login_cookie() {
 }
 
 function cwrc_logout() {
-	setcookie('cwrc-api', '', 1, '/');
+	unset($_SESSION[CWRC_COOKIE]);
+	//setcookie('cwrc-api', '', 1, '/');
 }
 
 function cwrc_createFormContent($inputXml, $data) {
