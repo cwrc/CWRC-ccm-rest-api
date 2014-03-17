@@ -1,8 +1,102 @@
 /**
- * @author adminuser
+ * @author mpm1
  *
  * Requires jQuery
  */
+function CwrcAnnotion(url, jq){
+	if (!jq) {
+		jq = $;
+	}
+
+	// Public Functions
+	this.searchAnnotion = function(searchObject){
+		// TODO: Should we search on annotations?	
+	}
+	
+	this.getAnnotaion = function(pid){
+		var result = result;
+
+		jq.ajax({
+			url : url + '/annotation/' + pid,
+			type : 'GET',
+			async : false,
+			success : function(data) {
+				result = data;
+			},
+			error : function(error) {
+				result = error;
+			}
+		});
+
+		return result;
+	}
+	
+	this.newAnnotation = function(data) {
+		var result = result;
+
+		jq.ajax({
+			url : url + '/annotation',
+			type : 'POST',
+			data : {
+				method : 'post',
+				data: data
+			},
+			async : false,
+			success : function(data) {
+				result = data;
+			},
+			error : function(error) {
+				result = error;
+			}
+		});
+
+		return jq.parseJSON(result);
+	}
+	
+	this.modifyAnnotation = function(pid, data) {
+		var result = result;
+
+		jq.ajax({
+			url : url + '/annotation/' + pid,
+			type : 'POST',
+			data : {
+				method : 'put',
+				data: data
+			},
+			async : false,
+			success : function(data) {
+				result = data;
+			},
+			error : function(error) {
+				result = error;
+			}
+		});
+
+		return jq.parseJSON(result);
+	}
+
+	this.deleteAnnotation = function(pid) {
+		var result = result;
+
+		jq.ajax({
+			url : url + '/annotation/' + pid,
+			type : 'POST',
+			async : false,
+			data: {
+				method: 'delete'
+			},
+			success : function(data) {
+				result = data;
+			},
+			error : function(error) {
+				result = error;
+			}
+		});
+
+		return jq.parseJSON(result);
+	}
+}
+
 function CwrcEntity(type, url, jq) {
 	if (!jq) {
 		jq = $;
@@ -139,12 +233,13 @@ function CwrcApi(url, jq) {
 	this.title = new CwrcEntity('title', url, jq);
 	//this.event = new CwrcEntity('event', url, jq); <- Can we use event or is that a javascript keyword?
 	this.place = new CwrcEntity('place', url, jq);
+	this.annotation = new CwrcAnnotion(url, jq);
 
 	// Private functions
 
 	// Public functions
 	this.isInitialized = function() {
-		var prefix = "cwrc-api=";
+		/*var prefix = "cwrc-api=";
 		var dc = document.cookie;
 		var index = dc.indexOf("; " + prefix);
 		if (index == -1) {
@@ -152,7 +247,8 @@ function CwrcApi(url, jq) {
 			return index == 0;
 		}
 
-		return true;
+		return true;*/ //TODO: Fix code
+		return false;
 	}
 
 	this.initializeWithCookie = function(name) {

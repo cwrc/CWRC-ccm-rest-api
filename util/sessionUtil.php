@@ -64,6 +64,7 @@ function cwrc_login($username, $password) {
 	$_SESSION[CWRC_COOKIE] = $cookies;
 }
 
+
 function get_login_cookie() {
 	$cookies = array();
 	$eachCookie = explode(';', $_SESSION[CWRC_COOKIE]);
