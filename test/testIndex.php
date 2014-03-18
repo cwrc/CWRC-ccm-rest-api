@@ -341,4 +341,80 @@ class Tests{
 			}
 		</script>";
 	}
+	
+	private static function addAnnotationComponent(){
+	    
+		$exampleDate = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+		<entity>
+			<person>
+				<recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
+                </recordInfo>
+				<identity>
+					<preferredForm>
+						<namePart>Test Person</namePart>
+					</preferredForm>
+				</identity>
+				<description>
+				</description>
+			</person>
+		</entity>";
+		$exampleDate = json_encode($exampleDate);//htmlspecialchars($examplePerson, ENT_QUOTES, ISO-8859-1, false);
+        
+        $noSelection = "Select type for appropriate XML template";
+        $noSelection = htmlspecialchars($noSelection, ENT_QUOTES, ISO-8859-1, false);
+		
+		echo "<div class='sideComponent'>";
+		
+		echo "<h2>Add Annotation</h2>";
+		
+		echo "<div>";
+		echo "<span class='label'>Annotation Type</span>";
+		echo "<select id='annotationType' onChange='updateAnnotationText();' >";
+        echo "<option value='select type'>selecttype</option>";
+		echo "<option value='date'>Date</option>";
+		echo "</select>";
+		echo "</div>";
+		
+		echo "<div>";
+		echo "<textarea id='annotationData' name='data'>" . $noSelection  . "</textarea>";
+		echo "</div>";
+		
+		echo "<button onclick='submitAnnotation();'>Submit</button>";
+		
+		echo "<script type='text/javascript'>
+		
+		     
+		     function updateAnnotationText(){
+                 
+                 var cwrctypemobj = $('#annotationType');
+                 var cwrctypetext = cwrctypemobj.find(':selected'').val();
+                 
+             	switch (cwrctypetext)
+                 {
+                   case 'date':
+                   document.getElementById('annotationData').value = " . $exampleDate . ";
+                   break;
+                 }   
+             }
+             
+		
+			function submitAnnotation(){
+				var type = $('#annotationType').val();
+				var val = $('#annotationData').val();
+                
+				
+				var result = cwrcApi['annotation'].newAnnotation(val);
+			
+				if(result.error){
+					alert(result.error);
+				}else{
+					window.location.href = '" . cwrc_site() . "/tests/viewEntity/' + encodeURIComponent(type) + '/' + encodeURIComponent(result.pid);
+				}
+			}
+		</script>";
+		echo "</div>";
+	}
 }
