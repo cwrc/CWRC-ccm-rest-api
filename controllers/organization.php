@@ -54,7 +54,7 @@ class OrganizationController extends EntityController {
 	}
 	
 	public static function update($id){
-		$result = EntityController::modifyEntity('ORGANIZATION', $id, $_POST['data']);
+		$result = EntityController::modifyEntity('ORGANIZATION', $id, $_POST['data'], static::getlabel($_POST['data']));
 		$object = array();
 		
 		if(get_class($result) == "Entity"){

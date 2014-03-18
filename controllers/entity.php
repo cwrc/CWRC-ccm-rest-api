@@ -93,8 +93,40 @@ abstract class EntityController {
 	 * @param pid The identifier of the entity.
 	 * @param data The content being placed
 	 */
-	protected static function modifyEntity($content_name, $pid, $data){
+	protected static function modifyEntity($content_name, $pid, $data, $label){
+	    
+    # update label
+	                   		    
+        $url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
+               
+        $data2 = array('label' => $label, 'method' => 'PUT');
+        
+        $header = array("Content-type: application/json");
+
+        foreach (get_login_cookie() as $key => $val) {
+            array_push($header, "Cookie: " . $key . "=" . $val);
+        }
+        
+        $options = array('http' => array('header' => $header, 'method' => 'PUT','content'=>json_encode($data2) ), );
+        $context = stream_context_create($options);
+        $result = @file_get_contents($url, false, $context); 
+        
+        
+          
+            
+       if (strpos($http_response_header[0], "200")) {      
+        } else {
+            return $http_response_header[0];
+
+        }
+        
+       
+    # update data
+    
 		$result = self::getEntity($pid, $content_name);
+      
+		
+		
 		
 		if(get_class($result) == self::ENTITY){
 			$successful = $result -> updateData($data);
