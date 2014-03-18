@@ -13,7 +13,8 @@ class Tests{
 		echo "</script>";
 		
 		if(count(get_login_cookie()) > 0){
-			echo "<h4>Logged in as " . $_SESSION['username'] . "</h4>";
+			//echo "<h4>Logged in as " . $_SESSION['username'] . "</h4>";
+			
 			echo "<button onclick='cwrcApi.logout();location.reload();' value='Logout'>Logout</button>";
 			echo "</form></br>";
 		}else{
@@ -31,7 +32,7 @@ class Tests{
 		}*/
 	}
 	
-	public static function logout(){
+	/*public static function logout(){
 		cwrc_logout();
 		
 		$_SESSION['username'] = null;
@@ -47,7 +48,7 @@ class Tests{
 		
 		$_SESSION['username'] = $username;
 		header('location: ' . $_SERVER['HTTP_REFERER']);
-	}
+	}*/
 	
 	public static function home(){
 		self::show_login();
@@ -60,11 +61,13 @@ class Tests{
 	
 	public static function viewEntity($type, $pid){
 		self::show_login();
+		$entity = EntityController::getEntity($pid, $type);
 		
 		echo "<h1>View Entity</h1>";
 		
 		echo "<h2>Type: " . htmlspecialchars($type) . "</h2>";
 		echo "<h2>PID: " . htmlspecialchars($pid) . "</h2>";
+		echo "<h2>Label: " . htmlspecialchars($entity->getLabel()) . "</h2>";
 		
 		echo "<h2>Content</h2>";
 		echo "<textarea id='entityContent' name='data'></textarea>";
@@ -110,49 +113,224 @@ class Tests{
 		echo "<h1>List Entities</h1>";
 		
 		echo "<h2>Type:</h2>";
-		echo "<select id='entityType' onchange='selectChanged()'>";
-		echo "<option></option>";
-		echo "<option value='person'>Person</option>";
-		echo "</select>";
+			
+		
+        echo "<select id='entityType' >";
+        echo "<option></option>";
+        echo "<option value='person'>Person</option>";
+        echo "<option value='place'>Place</option>";
+        echo "<option value='organization'>Organization</option>";
+        echo "<option value='title'>Title</option>";
+        echo "</select>";
+		
+		
+		echo "<div>Search:&nbsp<input id='searchText'/></div>";
+		echo "<button onclick='search()'>Search</button>";
 		
 		echo "<br/>";
 		
 		echo "<h2>Entities</h2>";
 		echo "<table>";
-		echo "<tr>
+		echo "<thead><tr>
 			<th>PID</th>
+			<th>Label</th>
 			<th>Action</th>
-		<tr>";
+		</tr></thead>";
+		echo "<tbody id='table_body'></tbody>";
 		echo "</table>";
 		
 		echo "<script type='text/javascript'>
-			function selectChanged(){
-				alert('changed');
+			function errorResult(result){
+				alert(result);
+			}
+			
+			function searchResult(result){
+				var searchText = $('#searchText').val();
+				var entity = $('#entityType').val();
+				var key;
+				
+				$('#table_body').empty();
+				
+				if(!result.response){
+					alert(result);
+				}
+				
+				var objects = result.response.objects;
+				
+				for(key in objects){
+					var object = objects[key];
+					var row = $('<tr></tr>');
+					
+					var data = $('<td></td>');
+					data.text(object.PID);
+					row.append(data);
+					
+					var data = $('<td></td>');
+					if(object.solr_doc['dc.title']){
+						data.text(object.solr_doc['fgs.label'][0]);
+					}
+					row.append(data);
+					
+					var data = $('<td></td>');
+					data.append('<a href=\"" . cwrc_site() . "/tests/viewEntity/' + entity + '/' + encodeURIComponent(object.PID) + '\">View</a>');
+					row.append(data);
+					
+					$('#table_body').append(row);
+				}
+			}
+			
+			function search(){
+				var searchText = $('#searchText').val();
+				var entity = $('#entityType').val();
+				var key;
+				
+                
+				var result = cwrcApi[entity].searchEntity({
+					query: searchText, 
+					success: searchResult,
+					error: errorResult,
+					limit: 100,
+					page: 0
+				});
 			}
 		</script>";
 	}
 	
 	public static function addEntity(){
+	    
+		$examplePerson = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+		<entity>
+			<person>
+				<recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
+                </recordInfo>
+				<identity>
+					<preferredForm>
+						<namePart>Test Person</namePart>
+					</preferredForm>
+				</identity>
+				<description>
+				</description>
+			</person>
+		</entity>";
+		$examplePerson = json_encode($examplePerson);//htmlspecialchars($examplePerson, ENT_QUOTES, ISO-8859-1, false);
+        
+        $examplePlace = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <entity>
+            <place>
+                <recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
+                </recordInfo>
+                <identity>
+                    <preferredForm>
+                        <namePart>Test Place</namePart>
+                    </preferredForm>
+                </identity>
+                <description>
+                </description>
+            </place>
+        </entity>";
+        $examplePlace = json_encode($examplePlace);//htmlspecialchars($examplePlace, ENT_QUOTES, ISO-8859-1, false);
+        
+        
+        $exampleOrganization = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <entity>
+            <organization>
+                <recordInfo>
+                    <originInfo>
+                                <projectId>record for testing API</projectId>
+                    </originInfo>
+                </recordInfo>
+                <identity>
+                    <preferredForm>
+                        <namePart>Test Organization</namePart>
+                    </preferredForm>
+                </identity>
+                <description>
+                </description>
+            </organization>
+        </entity>";
+        $exampleOrganization = json_encode($exampleOrganization);//htmlspecialchars($exampleOrganization, ENT_QUOTES, ISO-8859-1, false);
+        
+        $exampleTitle = "<mods>
+        <titleInfo>
+            <title>the titles tests</title>
+        </titleInfo>
+        <recordInfo>
+        </recordInfo>
+        </mods>";
+        $exampleTitle = json_encode($exampleTitle);//htmlspecialchars($exampleTitle, ENT_QUOTES, ISO-8859-1, false);
+        
+        
+        $noSelection = "Select type for appropriate XML template";
+        $noSelection = htmlspecialchars($noSelection, ENT_QUOTES, ISO-8859-1, false);
+		
 		self::show_login();
+		
 		echo "<h1>Add Entity</h1>";
 		
 		echo "<div>";
 		echo "<span class='label'>Entity Type</span>";
-		echo "<select id='entityType'>";
+		echo "<select id='entityType'onChange='updateText();' >";
+        echo "<option value='select type'>selecttype</option>";
 		echo "<option value='person'>Person</option>";
+        echo "<option value='place'>Place</option>";
+        echo "<option value='organization'>Organization</option>";
+        echo "<option value='title'>Title</option>";
 		echo "</select>";
 		echo "</div>";
 		
 		echo "<div>";
-		echo "<textarea id='entityData' name='data'></textarea>";
+		echo "<textarea id='entityData' name='data'>" . $noSelection  . "</textarea>";
 		echo "</div>";
 		
 		echo "<button onclick='submitEntity();'>Submit</button>";
 		
 		echo "<script type='text/javascript'>
+		
+		     
+		     function updateText(){
+                 
+                 var cwrctypemobj = document.getElementById('entityType');
+                 var cwrctypetext = cwrctypemobj.options[cwrctypemobj.selectedIndex].text;
+                
+                 //document.getElementById('entityData').value = cwrctypetext;
+                 //document.getElementById('entityData').value = 'blah';
+                 
+             switch (cwrctypetext)
+                 {
+                   case 'Person':
+                   document.getElementById('entityData').value = " .$examplePerson . ";
+                   break;
+                   
+                   case 'Place':
+                   document.getElementById('entityData').value = " .$examplePlace . ";
+                   break;
+                   
+                   case 'Organization':
+                   document.getElementById('entityData').value = " .$exampleOrganization . ";
+                   break;
+                   
+                   case 'Title':
+                   document.getElementById('entityData').value = " .$exampleTitle . ";
+                   break;
+                         
+                 }             
+
+
+             
+             }
+             
+		
 			function submitEntity(){
 				var type = $('#entityType').val();
 				var val = $('#entityData').val();
+                
+				
 				var result = cwrcApi[type].newEntity(val);
 			
 				if(result.error){

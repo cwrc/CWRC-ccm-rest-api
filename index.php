@@ -13,6 +13,10 @@ getRoute()->post('/initialize_user', 'initialize_user');
 getRoute()->post('/logout', 'cwrc_logout');
 
 require_once 'controllers/person.php';
+require_once 'controllers/place.php';
+require_once 'controllers/organization.php';
+require_once 'controllers/title.php';
+require_once 'controllers/annotation.php';
 require_once 'test/testIndex.php';
 
 session_start();

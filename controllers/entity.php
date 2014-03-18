@@ -5,6 +5,10 @@ include_once ('./models/entity.php');
  * Used to handle all entity based functions.
  */
 abstract class EntityController {
+	const ENTITY = "Entity";
+	const API_NAMESPACE = "cwrc";
+	const FEDORA_MODEL_URI = "info:fedora/fedora-system:def/model#";
+	
 	abstract public static function search();
 	abstract public static function view($id);
 	abstract public static function createNew($data);
@@ -61,7 +65,7 @@ abstract class EntityController {
 	 * @param pid The identifier of the entity.
 	 * @param content_name The specified name for the content holder of the entity.
 	 */
-	protected static function getEntity($pid, $content_name) {
+	public static function getEntity($pid, $content_name) {
 		$url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
 		
 		$header = array("Content-type: application/json");
@@ -89,10 +93,42 @@ abstract class EntityController {
 	 * @param pid The identifier of the entity.
 	 * @param data The content being placed
 	 */
-	protected static function modifyEntity($content_name, $pid, $data){
+	protected static function modifyEntity($content_name, $pid, $data, $label){
+	    
+    # update label
+	                   		    
+        $url = cwrc_url() . "/islandora/rest/v1/object/" . $pid;
+               
+        $data2 = array('label' => $label, 'method' => 'PUT');
+        
+        $header = array("Content-type: application/json");
+
+        foreach (get_login_cookie() as $key => $val) {
+            array_push($header, "Cookie: " . $key . "=" . $val);
+        }
+        
+        $options = array('http' => array('header' => $header, 'method' => 'PUT','content'=>json_encode($data2) ), );
+        $context = stream_context_create($options);
+        $result = @file_get_contents($url, false, $context); 
+        
+        
+          
+            
+       if (strpos($http_response_header[0], "200")) {      
+        } else {
+            return $http_response_header[0];
+
+        }
+        
+       
+    # update data
+    
 		$result = self::getEntity($pid, $content_name);
+      
 		
-		if(get_class($result) == "Entity"){
+		
+		
+		if(get_class($result) == self::ENTITY){
 			$successful = $result -> updateData($data);
 			
 			if($successful == null){
@@ -111,9 +147,9 @@ abstract class EntityController {
 	 * @param content_name The specified name for the content holder of the entity.
 	 * @param entityData The content being placed
 	 */
-	protected static function uploadNewEntity($namespace, $content_name, $entityData) {
+	protected static function uploadNewEntity($namespace, $content_name, $entityData, $label, $entityModel) {
 		$url = cwrc_url() . "/islandora/rest/v1/object";
-		$data = array('namespace' => $namespace);
+		$data = array('namespace' => $namespace, 'label' => $label);
 
 		$header = array("Content-type: application/json");
 
@@ -129,6 +165,7 @@ abstract class EntityController {
 			// Item created.
 			$entity = new Entity(json_decode($result), $content_name);
 			$successful = $entity -> updateData($entityData);
+			$successful = $successful == null ? $entity -> setRelationship(self::FEDORA_MODEL_URI, "hasModel", $entityModel) : $successful;
 			
 			if($successful == null){
 				return $entity;
@@ -140,10 +177,25 @@ abstract class EntityController {
 		}
 	}
 	
-	protected static function searchEntities($content_name, $searchString, $start, $rows){
-		//$queryString = urlencode($searchString);
-		$url = cwrc_url() . "/islandora/rest/v1/solr/" . urlencode($searchString);
-		$data = array('wt' => 'json', 'start' => $start, 'rows' => $rows, 'fq' => 'hasDatastream:' . $content_name);
+	protected static function buildQueryString($searchString){
+		if(preg_match('/^(["\']).*\1$/m', $searchString)){
+			return urlencode($searchString);
+		}
+		
+		$returnString = "";
+		$explosion = explode("*", $searchString);
+		
+		foreach($explosion as $value){
+			$returnString .= urlencode($value) . "*";
+		}
+		
+		return "(" . strtolower($returnString) . ")";
+	}
+	
+	protected static function searchEntities($entityModel, $searchString, $limit, $page){
+		$queryString = self::buildQueryString($searchString);
+		$url = cwrc_url() . "/islandora/rest/v1/solr/fgs.label:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=rels.hasModel:" . str_replace(array(":"), "%5C:", $entityModel);// . '&sort="fgs.label"+asc';
+		$data = array();
 
 		$header = array("Content-type: application/json");
 
@@ -159,3 +211,5 @@ abstract class EntityController {
 	}
 
 }
+
+?>
