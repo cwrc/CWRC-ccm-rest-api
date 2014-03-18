@@ -6,6 +6,21 @@ getRoute()->get('/tests/listEntities', array('Tests', 'listEntities'));
 
 class Tests{
 	public static function show_login(){
+		echo "
+		<style>
+		.leftPanel {
+			width: 700px;
+		}
+		
+		.rightPanel {
+			width: 300px;
+		}
+		
+		.sideComponent {
+			background-color: #AAAAFF;
+		}
+		</style>";
+		
 		echo "<script src='" . cwrc_site() . "/scripts/jquery-1.10.2.min.js'></script>";
 		echo "<script src='" . cwrc_site() . "/scripts/cwrc-api.js'></script>";
 		echo "<script type='text/javascript'>";
@@ -63,6 +78,8 @@ class Tests{
 		self::show_login();
 		$entity = EntityController::getEntity($pid, $type);
 		
+		echo "<div style='width: 1100px'><div class='leftPanel'>";
+		
 		echo "<h1>View Entity</h1>";
 		
 		echo "<h2>Type: " . htmlspecialchars($type) . "</h2>";
@@ -75,6 +92,12 @@ class Tests{
 		echo "<button onclick='return updateEntity();'>Update</button>";
 		echo "<button onclick='deleteEntity();'>Delete</button>";
 		echo "</div>";
+		
+		echo "</div><div class='rightPanel'>";
+		
+		Tests::addAnnotationComponent();
+		
+		echo "</div></div>";
 		
 		echo "<script type='text/javascript'>
 			function deleteEntity(){
@@ -390,7 +413,7 @@ class Tests{
 		     function updateAnnotationText(){
                  
                  var cwrctypemobj = $('#annotationType');
-                 var cwrctypetext = cwrctypemobj.find(':selected'').val();
+                 var cwrctypetext = cwrctypemobj.find(':selected').val();
                  
              	switch (cwrctypetext)
                  {
@@ -411,7 +434,7 @@ class Tests{
 				if(result.error){
 					alert(result.error);
 				}else{
-					window.location.href = '" . cwrc_site() . "/tests/viewEntity/' + encodeURIComponent(type) + '/' + encodeURIComponent(result.pid);
+					//window.location.href = '" . cwrc_site() . "/tests/viewEntity/' + encodeURIComponent(type) + '/' + encodeURIComponent(result.pid);
 				}
 			}
 		</script>";

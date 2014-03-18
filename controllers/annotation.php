@@ -108,7 +108,8 @@ include_once ('./models/annotation.php');
 		}
 	}
 
-	protected static function createNew($parentId, $annotationData){
+	protected static function createNew($annotationData){
+		$object = array();
 		$url = cwrc_url() . "/islandora/rest/v1/object";
 		$data = array('namespace' => self::API_NAMESPACE, 'label' => $label);
 		
@@ -129,13 +130,15 @@ include_once ('./models/annotation.php');
 			$successful = $successful == null ? $annotation -> setRelationship(self::FEDORA_MODEL_URI, "hasModel", 'cwrc:OACModel') : $successful;
 			
 			if($successful == null){
-				return $annotation;
+				$object["pid"] = $annotation->getPID();
 			}else{
-				return $successful;
+				$object["error"] = $successful;
 			}
 		} else {
-			return $http_response_header[0];
+			$object["error"] = $http_response_header[0];
 		}
+		
+		echo json_encode($object);
 	}
  }
 ?>
