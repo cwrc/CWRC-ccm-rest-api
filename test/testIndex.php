@@ -368,22 +368,9 @@ class Tests{
 	private static function addAnnotationComponent(){
 	    
 		$exampleDate = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-		<entity>
-			<person>
-				<recordInfo>
-                    <originInfo>
-                                <projectId>record for testing API</projectId>
-                    </originInfo>
-                </recordInfo>
-				<identity>
-					<preferredForm>
-						<namePart>Test Person</namePart>
-					</preferredForm>
-				</identity>
-				<description>
-				</description>
-			</person>
-		</entity>";
+		<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:dcterms='http://purl.org/dc/terms/' xmlns:dctype='http://purl.org/dc/dcmitype/' xmlns:oa='http://www.w3.org/ns/openannotation/core/' xmlns:cnt='http://www.w3.org/2008/content#' xmlns:dms='http://dms.stanford.edu/ns/' xmlns:ore='http://www.openarchives.org/ore/terms/' xmlns:exif='http://www.w3.org/2003/12/exif/ns#'>
+		</rdf:RDF>
+		";
 		$exampleDate = json_encode($exampleDate);//htmlspecialchars($examplePerson, ENT_QUOTES, ISO-8859-1, false);
         
         $noSelection = "Select type for appropriate XML template";

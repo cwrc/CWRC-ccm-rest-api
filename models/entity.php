@@ -101,6 +101,28 @@ class Entity {
 			return $url . " - " . $http_response_header[0];
 		}
 	}*/
+	
+	protected function addWorkflowEntry($category, $toolID){
+		$url = cwrc_url() . "/islandora_workflow_rest/v1/add_workflow/" . $this -> data -> pid;
+		$data = array('PID' => $this -> data -> pid, 'toolID' => $toolID, 'activity' => array('category' => $category, 'stamp' => 'nis:AO', 'status' => 'c'));
+		$header = array();
+		
+		foreach (get_login_cookie() as $key => $val) {
+			array_push($header, "Cookie: " . $key . "=" . $val);
+		}
+		
+		array_push($header, "Content-type: application/json");
+		
+		$options = array('http' => array('header' => $header, 'method' => 'GET', 'content' => json_encode($data), ), );
+		$context = stream_context_create($options);
+		$result = @file_get_contents($url, false, $context);
+		
+		if (strpos($http_response_header[0], "200")) {
+			return null;
+		}else {
+			return $url . " - " . $http_response_header[0] . "\n" . $result;
+		}
+	}
 
 	/**
 	 * Updates the current content of the entity.
@@ -133,11 +155,12 @@ class Entity {
 		$context = stream_context_create(array('http' => array('header' => $header, 'method' => $method, 'content' => $content)));
 
 		$result = file_get_contents($url, false, $context);
+		
 
 		if (strpos($http_response_header[0], "201")) {
-			return null;
+			return $this->addWorkflowEntry('created', 'cwrc'); // Add the workflow information
 		} else if (strpos($http_response_header[0], "200")) {
-			return null;
+			return  $this->addWorkflowEntry('content_contribution', 'cwrc');// Add the workflow information
 		}else {
 			return $http_response_header[0];
 		}
