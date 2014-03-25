@@ -102,9 +102,11 @@ class Entity {
 		}
 	}*/
 	
-	protected function addWorkflowEntry($category, $toolID){
-		$url = cwrc_url() . "/islandora_workflow_rest/v1/add_workflow/" . $this -> data -> pid;
-		$data = array('PID' => $this -> data -> pid, 'toolID' => $toolID, 'activity' => array('category' => $category, 'stamp' => 'nis:AO', 'status' => 'c'));
+	protected function addWorkflowEntry($category, $stampType, $toolID){
+		$url = cwrc_url() . "/islandora_workflow_rest/v1/add_workflow/?";
+		$url .= 'PID=' . urlencode($this -> data -> pid);
+		//$url .= '&toolID=' . $toolID;
+		$url .= '&activity=' . urlencode(json_encode(array('category' => $category, 'stamp' => $stampType, 'status' => 'c')));
 		$header = array();
 		
 		foreach (get_login_cookie() as $key => $val) {
@@ -113,7 +115,7 @@ class Entity {
 		
 		array_push($header, "Content-type: application/json");
 		
-		$options = array('http' => array('header' => $header, 'method' => 'GET', 'content' => json_encode($data), ), );
+		$options = array('http' => array('header' => $header, 'method' => 'GET', ), );
 		$context = stream_context_create($options);
 		$result = @file_get_contents($url, false, $context);
 		
@@ -158,9 +160,9 @@ class Entity {
 		
 
 		if (strpos($http_response_header[0], "201")) {
-			return $this->addWorkflowEntry('created', 'cwrc'); // Add the workflow information
+			return $this->addWorkflowEntry('created', 'cwrc:cre', 'cwrc'); // Add the workflow information
 		} else if (strpos($http_response_header[0], "200")) {
-			return  $this->addWorkflowEntry('content_contribution', 'cwrc');// Add the workflow information
+			return  $this->addWorkflowEntry('content_contribution', 'cwrc:cvr', 'cwrc');// Add the workflow information
 		}else {
 			return $http_response_header[0];
 		}
