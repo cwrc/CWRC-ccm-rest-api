@@ -25,6 +25,14 @@ function cwrc_site() {
 	}*/
 }
 
+function is_initialized(){
+	$object = array();
+	
+	$object["result"] = isset($_SESSION[CWRC_COOKIE]);
+	
+	echo json_encode($object);
+}
+
 function initialize_cookie() {
 	$name = $_POST['name'];
 	

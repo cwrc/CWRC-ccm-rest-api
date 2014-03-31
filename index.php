@@ -10,6 +10,7 @@ Epi::init('route');
 // Setup login functions
 getRoute()->post('/initialize_cookie', 'initialize_cookie');
 getRoute()->post('/initialize_user', 'initialize_user');
+getRoute()->post('/is_initialized', 'is_initialized');
 getRoute()->post('/logout', 'cwrc_logout');
 
 require_once 'controllers/person.php';

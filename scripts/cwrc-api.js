@@ -234,42 +234,47 @@ function CwrcApi(url, jq) {
 	//this.event = new CwrcEntity('event', url, jq); <- Can we use event or is that a javascript keyword?
 	this.place = new CwrcEntity('place', url, jq);
 	this.annotation = new CwrcAnnotion(url, jq);
+	this.isInitialized = false;
 
 	// Private functions
-
-	// Public functions
-	this.isInitialized = function() {
-		/*var prefix = "cwrc-api=";
-		var dc = document.cookie;
-		var index = dc.indexOf("; " + prefix);
-		if (index == -1) {
-			index = dc.indexOf(prefix);
-			return index == 0;
-		}
-
-		return true;*/ //TODO: Fix code
-		return false;
+	this.updateIsInitialized = function(){
+		jq.ajax({
+			url : url + "is_initialized",
+			type : 'POST',
+			data : {
+				name : name
+			},
+			success : function(data) {
+				_this.isInitialized = JSON.parse(data).result;
+			},
+			error : function(error) {
+				result = error;
+				_this.isInitialized = false;
+			}
+		});
 	}
 
+	// Public functions
 	this.initializeWithCookie = function(name) {
 		var result = result;
 
-		if (!_this.isInitialized()) {
-			jq.ajax({
-				url : url + "initialize_user",
-				type : 'POST',
-				async : false,
-				data : {
-					name : name
-				},
-				success : function(data) {
-					result = data;
-				},
-				error : function(error) {
-					result = error;
-				}
-			});
-		}
+			
+		jq.ajax({
+			url : url + "initialize_user",
+			type : 'POST',
+			async : false,
+			data : {
+				name : name
+			},
+			success : function(data) {
+				result = data;
+				_this.isInitialized = true;
+			},
+			error : function(error) {
+				result = error;
+			}
+		}); 
+
 
 		return result;
 	}
@@ -277,24 +282,25 @@ function CwrcApi(url, jq) {
 	this.initializeWithLogin = function(username, password) {
 		var result = result;
 
-		if (!_this.isInitialized()) {
-			jq.ajax({
-				url : url + "initialize_user",
-				type : 'POST',
-				async : false,
-				data : {
-					username : username,
-					password : password
-				},
-				success : function(data) {
-					result = data;
-				},
-				error : function(error) {
-					result = error;
-				}
-			});
-		}
+			
+		jq.ajax({
+			url : url + "initialize_user",
+			type : 'POST',
+			async : false,
+			data : {
+				username : username,
+				password : password
+			},
+			success : function(data) {
+				result = data;
+				_this.isInitialized = true;
+			},
+			error : function(error) {
+				result = error;
+			}
+		}); 
 
+			
 		return result;
 	}
 
@@ -315,8 +321,11 @@ function CwrcApi(url, jq) {
 			});
 		}
 
+		_this.isInitialized = false;
 		return result;
 	}
+	
+	this.updateIsInitialized();
 
 	return this;
 }
