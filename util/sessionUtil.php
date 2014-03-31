@@ -52,16 +52,24 @@ function cwrc_login($username, $password) {
 	$options = array('http' => array('header' => "Content-type: application/json\r\n", 'method' => 'POST', 'content' => json_encode($data), ), );
 	$context = stream_context_create($options);
 	$result = file_get_contents($url, false, $context);
-
-	$cookies = '';
-	foreach ($http_response_header as $s) {
-		if (preg_match('/^Set-Cookie:\s*([^;]+)/', $s, $parts)) {
-			$cookies = $cookies . $parts[1] . ';';
+	
+	
+	if (strpos($http_response_header[0], "200")) {
+		$cookies = '';
+		foreach ($http_response_header as $s) {
+			if (preg_match('/^Set-Cookie:\s*([^;]+)/', $s, $parts)) {
+				$cookies = $cookies . $parts[1] . ';';
+			
+				//error_log($s); //TODO: Get the eparation date
+			}
 		}
-	}
 
-	//setcookie(CWRC_COOKIE, $cookies, 0, '/');
-	$_SESSION[CWRC_COOKIE] = $cookies;
+		//setcookie(CWRC_COOKIE, $cookies, 0, '/');
+		$_SESSION[CWRC_COOKIE] = $cookies;
+	}else{
+		error_log($http_response_header[0]);
+		throw new Exception('An error occured while trying to login.');
+	}
 }
 
 
