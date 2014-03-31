@@ -162,7 +162,7 @@ class Entity {
 		if (strpos($http_response_header[0], "201")) {
 			return $this->addWorkflowEntry('created', 'cwrc:cre', 'cwrc'); // Add the workflow information
 		} else if (strpos($http_response_header[0], "200")) {
-			return  $this->addWorkflowEntry('content_contribution', 'cwrc:evr', 'cwrc');// Add the workflow information
+			return  $this->addWorkflowEntry('content_contribution', 'cwrc:mod', 'cwrc');// Add the workflow information
 		}else {
 			return $http_response_header[0];
 		}
