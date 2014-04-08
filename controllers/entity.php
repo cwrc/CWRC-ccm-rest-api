@@ -8,6 +8,7 @@ abstract class EntityController {
 	const ENTITY = "Entity";
 	const API_NAMESPACE = "cwrc";
 	const FEDORA_MODEL_URI = "info:fedora/fedora-system:def/model#";
+	const FEDORA_URI = "info:fedora/fedora-system:def/relations-external#";
 	
 	abstract public static function search();
 	abstract public static function view($id);
@@ -147,7 +148,7 @@ abstract class EntityController {
 	 * @param content_name The specified name for the content holder of the entity.
 	 * @param entityData The content being placed
 	 */
-	protected static function uploadNewEntity($namespace, $content_name, $entityData, $label, $entityModel) {
+	protected static function uploadNewEntity($namespace, $content_name, $entityData, $label, $entityModel, $collection) {
 		$url = cwrc_url() . "/islandora/rest/v1/object";
 		$data = array('namespace' => $namespace, 'label' => $label);
 
@@ -166,6 +167,7 @@ abstract class EntityController {
 			$entity = new Entity(json_decode($result), $content_name);
 			$successful = $entity -> updateData($entityData);
 			$successful = $successful == null ? $entity -> setRelationship(self::FEDORA_MODEL_URI, "hasModel", $entityModel) : $successful;
+			$successful = $successful == null ? $entity -> setRelationship(self::FEDORA_URI, "isMemberOfCollection", $collection) : $successful;
 			
 			if($successful == null){
 				return $entity;

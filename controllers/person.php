@@ -64,7 +64,7 @@ class PersonController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity(self::API_NAMESPACE, self::PERSON, $data['data'], static::getLabel($data['data']), self::MODEL);
+		$result = EntityController::uploadNewEntity(self::API_NAMESPACE, self::PERSON, $data['data'], static::getLabel($data['data']), self::MODEL, "cwrc:d3c004f1-2b3f-4e51-a679-4f1c0da4fe17");
 		$object = array();
 		
 		if(get_class($result) == self::ENTITY){
