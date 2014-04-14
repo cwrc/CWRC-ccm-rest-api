@@ -8,6 +8,7 @@ getRoute()->delete('/place/(.+)', array('PlaceController', 'delete'));
 include_once './controllers/entity.php';
 
 class PlaceController extends EntityController {
+	const MODEL = "cwrc:place-entityCModel";
 	
 	private static function getLabel($data){
 		// This assumes that the place object is properly formed.
@@ -26,7 +27,7 @@ class PlaceController extends EntityController {
 		$limit = $_GET['limit'];
 		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities("cwrc:place-entityCModel", $query, $limit, $page);
+		$result = EntityController::searchEntities("info:fedora/" . self::MODEL, $query, $limit, $page);
 		
 		echo($result);
 	}
@@ -42,7 +43,7 @@ class PlaceController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'PLACE', $data['data'], static::getLabel($data['data']), "cwrc:place-entityCModel", "cwrc:20d46869-20a0-4d19-9ef6-1aacb3a1fba8");
+		$result = EntityController::uploadNewEntity('cwrc', 'PLACE', $data['data'], static::getLabel($data['data']), self::MODEL, "cwrc:20d46869-20a0-4d19-9ef6-1aacb3a1fba8");
 		$object = array();
 		
 		if(get_class($result) == "Entity"){

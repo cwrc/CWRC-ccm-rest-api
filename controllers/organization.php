@@ -8,6 +8,7 @@ getRoute()->delete('/organization/(.+)', array('OrganizationController', 'delete
 include_once './controllers/entity.php';
 
 class OrganizationController extends EntityController {
+	const MODEL = "cwrc:organization-entityCModel";
 	
 	private static function getLabel($data){
 		// This assumes that the organization object is properly formed.
@@ -25,7 +26,7 @@ class OrganizationController extends EntityController {
 		$limit = $_GET['limit'];
 		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities("cwrc:organization-entityCModel", $query, $limit, $page);
+		$result = EntityController::searchEntities("info:fedora/" . self::MODEL, $query, $limit, $page);
 		
 		echo($result);
 	}
@@ -41,7 +42,7 @@ class OrganizationController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'ORGANIZATION', $data['data'], static::getLabel($data['data']), "cwrc:organization-entityCModel", "cwrc:65c257ec-446c-479c-8695-6c015788413b");
+		$result = EntityController::uploadNewEntity('cwrc', 'ORGANIZATION', $data['data'], static::getLabel($data['data']), self::MODEL, "cwrc:65c257ec-446c-479c-8695-6c015788413b");
 		$object = array();
 		
 		if(get_class($result) == "Entity"){

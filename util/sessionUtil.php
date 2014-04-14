@@ -8,36 +8,36 @@ function cwrc_url() {
 }
 
 function cwrc_site() {
-	 return "http://localhost/cwrc";
+	return "http://localhost/cwrc";
 	//return "http://localhost/";
 	/*if(strlen($_SERVER[QUERY_STRING]) > 10){
-		$pos = strpos($_SERVER["REQUEST_URI"], substr($_SERVER["QUERY_STRING"], 10));
-		
-		if($pos == 0){
-			return "";
-		}
-		
-		$asd = substr($_SERVER["REQUEST_URI"], 0, $pos);
-	
-		return $asd;
-	}else{
-		return substr($_SERVER["REQUEST_URI"], 0, strlen($_SERVER["REQUEST_URI"]) - 1);
-	}*/
+	 $pos = strpos($_SERVER["REQUEST_URI"], substr($_SERVER["QUERY_STRING"], 10));
+
+	 if($pos == 0){
+	 return "";
+	 }
+
+	 $asd = substr($_SERVER["REQUEST_URI"], 0, $pos);
+
+	 return $asd;
+	 }else{
+	 return substr($_SERVER["REQUEST_URI"], 0, strlen($_SERVER["REQUEST_URI"]) - 1);
+	 }*/
 }
 
-function is_initialized(){
+function is_initialized() {
 	$object = array();
-	
+
 	$object["result"] = isset($_SESSION[CWRC_COOKIE]);
-	
+
 	echo json_encode($object);
 }
 
 function initialize_cookie() {
 	$name = $_POST['name'];
-	
+
 	$cookie = $_COOKIE[$name];
-	
+
 	$cookies = '';
 	foreach ($http_response_header as $s) {
 		if (preg_match('/^Set-Cookie:\s*([^;]+)/', $s, $parts)) {
@@ -60,40 +60,41 @@ function cwrc_login($username, $password) {
 	$options = array('http' => array('header' => "Content-type: application/json\r\n", 'method' => 'POST', 'content' => json_encode($data), ), );
 	$context = stream_context_create($options);
 	$result = file_get_contents($url, false, $context);
-	
-	
+
 	if (strpos($http_response_header[0], "200")) {
 		$cookies = '';
 		foreach ($http_response_header as $s) {
 			if (preg_match('/^Set-Cookie:\s*([^;]+)/', $s, $parts)) {
 				$cookies = $cookies . $parts[1] . ';';
-			
+
 				//error_log($s); //TODO: Get the eparation date
 			}
 		}
 
 		//setcookie(CWRC_COOKIE, $cookies, 0, '/');
 		$_SESSION[CWRC_COOKIE] = $cookies;
-	}else{
+	} else {
 		error_log($http_response_header[0]);
 		throw new Exception('An error occured while trying to login.');
 	}
 }
 
-
 function get_login_cookie() {
 	$cookies = array();
-	$eachCookie = explode(';', $_SESSION[CWRC_COOKIE]);
 
-	foreach ($eachCookie as $val) {
-		if (strlen($val) > 0) {
-			$parts = explode('=', $val);
-			
-			if(strpos($parts[0], "DRUPALCHAT") === 0){
-				continue;	
+	if (isset($_SESSION[CWRC_COOKIE])) {
+		$eachCookie = explode(';', $_SESSION[CWRC_COOKIE]);
+
+		foreach ($eachCookie as $val) {
+			if (strlen($val) > 0) {
+				$parts = explode('=', $val);
+
+				if (strpos($parts[0], "DRUPALCHAT") === 0) {
+					continue;
+				}
+
+				$cookies[$parts[0]] = $parts[1];
 			}
-			
-			$cookies[$parts[0]] = $parts[1];
 		}
 	}
 

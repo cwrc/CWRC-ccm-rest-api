@@ -8,6 +8,7 @@ getRoute()->delete('/title/(.+)', array('TitleController', 'delete'));
 include_once './controllers/entity.php';
 
 class TitleController extends EntityController {
+	const MODEL = "cwrc:title-entityCModel";
 	
 	private static function getLabel($data){
 		// This assumes that the title object is properly formed.
@@ -41,7 +42,7 @@ class TitleController extends EntityController {
 		$limit = $_GET['limit'];
 		$page = $_GET['page'];
 		
-		$result = EntityController::searchEntities("cwrc:title-entityCModel", $query, $limit, $page);
+		$result = EntityController::searchEntities("info:fedora/" . self::MODEL, $query, $limit, $page);
 		
 		echo($result);
 	}
@@ -57,7 +58,7 @@ class TitleController extends EntityController {
 	}
 	
 	public static function createNew($data){
-		$result = EntityController::uploadNewEntity('cwrc', 'MODS', $data['data'], static::getLabel($data['data']), "cwrc:title-entityCModel", "cwrc:bc53ab0d-3138-4791-a32a-5579fd067552");
+		$result = EntityController::uploadNewEntity('cwrc', 'MODS', $data['data'], static::getLabel($data['data']), self::MODEL, "cwrc:bc53ab0d-3138-4791-a32a-5579fd067552");
 		$object = array();
 		
 		if(get_class($result) == "Entity"){

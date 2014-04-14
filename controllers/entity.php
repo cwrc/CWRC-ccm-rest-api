@@ -196,7 +196,11 @@ abstract class EntityController {
 	
 	protected static function searchEntities($entityModel, $searchString, $limit, $page){
 		$queryString = self::buildQueryString($searchString);
-		$url = cwrc_url() . "/islandora/rest/v1/solr/fgs.label:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=rels.hasModel:" . str_replace(array(":"), "%5C:", $entityModel);// . '&sort="fgs.label"+asc';
+		//$url = cwrc_url() . "/islandora/rest/v1/solr/dc.title:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=rels.hasModel:" . str_replace(array(":"), "%5C:", $entityModel);// . '&sort="fgs.label"+asc';
+		$url = cwrc_url() . "/islandora/rest/v1/solr/dc.title:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=RELS_EXT_hasModel_uri_ms:" . str_replace(array("%3A"), "%5C:", urlencode($entityModel));// . '&sort="fgs.label"+asc';
+		
+		error_log($url);
+		
 		$data = array();
 
 		$header = array("Content-type: application/json");

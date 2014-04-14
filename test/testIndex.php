@@ -190,7 +190,7 @@ class Tests{
 					
 					var data = $('<td></td>');
 					if(object.solr_doc['dc.title']){
-						data.text(object.solr_doc['fgs.label'][0]);
+						data.text(object.solr_doc['dc.title'][0]);
 					}
 					row.append(data);
 					
