@@ -18,8 +18,6 @@ class PlaceController extends EntityController {
 		
         
         return (string)$nameParts; 
-       
-        
 	}
 	
 	public static function search(){

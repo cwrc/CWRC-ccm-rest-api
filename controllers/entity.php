@@ -179,7 +179,7 @@ abstract class EntityController {
 		}
 	}
 	
-	protected static function buildQueryString($searchString){
+	protected static function buildQueryString($searchString, $entityModel){
 		if(preg_match('/^(["\']).*\1$/m', $searchString)){
 			return urlencode($searchString);
 		}
@@ -191,13 +191,35 @@ abstract class EntityController {
 			$returnString .= urlencode($value) . "*";
 		}
 		
-		return "(" . strtolower($returnString) . ")";
+		$compiledSearch = "(" . strtolower($returnString) . ")";
+		
+		// Build the string based on variants
+		if($entityModel === "info:fedora/" . PersonController::MODEL){
+			$returnString = "cwrc_entity_person_preferredForm_et:" . $compiledSearch;
+			$returnString .= "%20OR%20";
+			$returnString .= "cwrc_entity_person_variantForm_et:" . $compiledSearch; 
+		}else if($entityModel === "info:fedora/" . OrganizationController::MODEL){
+			$returnString = "cwrc_entity_org_preferredForm_et:" . $compiledSearch;
+			$returnString .= "%20OR%20";
+			$returnString .= "cwrc_entity_org_variantForm_et:" . $compiledSearch; 
+		}else if($entityModel === "info:fedora/" . PlaceController::MODEL){
+			$returnString = "cwrc_entity_place_preferredForm_et:" . $compiledSearch;
+			$returnString .= "%20OR%20";
+			$returnString .= "cwrc_entity_place_variantForm_et:" . $compiledSearch; 
+		}else if($entityModel === "info:fedora/" . TitleController::MODEL){
+			$returnString = "cwrc_entity_title_uniformTitle_et:" . $compiledSearch;
+			$returnString .= "%20OR%20";
+			$returnString .= "cwrc_entity_place_variantTitle_et:" . $compiledSearch; 
+		}
+		
+		
+		return "(" . $returnString . ")";
 	}
 	
 	protected static function searchEntities($entityModel, $searchString, $limit, $page){
-		$queryString = self::buildQueryString($searchString);
+		$queryString = self::buildQueryString($searchString, $entityModel);
 		//$url = cwrc_url() . "/islandora/rest/v1/solr/dc.title:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=rels.hasModel:" . str_replace(array(":"), "%5C:", $entityModel);// . '&sort="fgs.label"+asc';
-		$url = cwrc_url() . "/islandora/rest/v1/solr/dc.title:" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=RELS_EXT_hasModel_uri_ms:" . str_replace(array("%3A"), "%5C:", urlencode($entityModel));// . '&sort="fgs.label"+asc';
+		$url = cwrc_url() . "/islandora/rest/v1/solr/" . $queryString . "?wt=json&limit=" . $limit . "&page=" . $page . "&f[]=RELS_EXT_hasModel_uri_ms:" . str_replace(array("%3A"), "%5C:", urlencode($entityModel));// . '&sort="fgs.label"+asc';
 		
 		error_log($url);
 		
