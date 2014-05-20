@@ -148,7 +148,7 @@ class Entity {
 		} else {
 			$method = 'POST';
 			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream/" . $this -> content_name;
-			$data = array('method' => 'PUT');
+			$data = array('method' => 'PUT', 'mimeType' => 'text/xml');
 		}
 
 		$content = cwrc_createFormContent($inputXml, $data);
