@@ -180,7 +180,7 @@ abstract class EntityController {
 	}
 	
 	protected static function buildQueryString($searchString, $entityModel){
-		if(preg_match('/^(["\']).*\1$/m', $searchString)){
+		/*if(preg_match('/^(["\']).*\1$/m', $searchString)){
 			return urlencode($searchString);
 		}
 		
@@ -188,10 +188,12 @@ abstract class EntityController {
 		$explosion = explode("*", $searchString);
 		
 		foreach($explosion as $value){
-			$returnString .= urlencode($value) . "*";
+			$returnString .= urlencode($value);
 		}
 		
-		$compiledSearch = "(" . strtolower($returnString) . ")";
+		$compiledSearch = "(" . strtolower($returnString) . ")";*/
+		$returnString = "";
+		$compiledSearch = "(" . urldecode(strtolower($searchString)) . ")";
 		
 		// Build the string based on variants
 		if($entityModel === "info:fedora/" . PersonController::MODEL){
