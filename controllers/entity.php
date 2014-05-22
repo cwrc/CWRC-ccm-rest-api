@@ -192,8 +192,12 @@ abstract class EntityController {
 		}
 		
 		$compiledSearch = "(" . strtolower($returnString) . ")";*/
-		$returnString = "";
-		$compiledSearch = "(" . urldecode(strtolower($searchString)) . ")";
+		$returnString = strtolower($searchString);
+		$returnString = preg_replace("/\+/", " ", $returnString);
+		$returnString = urldecode($returnString);
+		$returnString = preg_replace("/\s/", "+", $returnString);
+		error_log("ReturnString: " . $returnString);
+		$compiledSearch = "(" . $returnString . ")";
 		
 		// Build the string based on variants
 		if($entityModel === "info:fedora/" . PersonController::MODEL){
