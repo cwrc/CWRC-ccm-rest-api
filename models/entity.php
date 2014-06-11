@@ -125,6 +125,28 @@ class Entity {
 			return $url . " - " . $http_response_header[0] . "\n" . $result;
 		}
 	}
+	
+	/**
+	 * Updates the elements properties
+	 */
+	 function updateProperties($data){
+	 	$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid;
+		$header = array("Content-type: application/json");
+		
+		foreach (get_login_cookie() as $key => $val) {
+			array_push($header, "Cookie: " . $key . "=" . $val);
+		}
+		
+		$options = array('http' => array('header' => $header, 'method' => 'PUT', 'content' => json_encode($data), ), );
+		$context = stream_context_create($options);
+		$result = @file_get_contents($url, false, $context);
+		
+		if (strpos($http_response_header[0], "200")) {
+			return null;
+		} else {
+			return $http_response_header[0];
+		}
+	 }
 
 	/**
 	 * Updates the current content of the entity.
@@ -144,7 +166,7 @@ class Entity {
 		if ($this -> content == NULL) {
 			$method = 'POST';
 			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream";
-			$data = array('dsid' => $this -> content_name, 'mimeType' => 'text/xml', 'label' => 'Entity Data', 'controlGroup' => 'M');
+			$data = array('dsid' => $this -> content_name, 'mimeType' => 'text/xml', 'label' => 'Entity Data', 'controlGroup' => 'M', 'state' => 'A');
 		} else {
 			$method = 'POST';
 			$url = cwrc_url() . "/islandora/rest/v1/object/" . $this -> data -> pid . "/datastream/" . $this -> content_name;
