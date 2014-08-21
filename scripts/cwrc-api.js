@@ -261,7 +261,7 @@ function CwrcApi(url, jq) {
 	 * Initialize the data using a set of existing cookies.
 	 * var name The cookie to obtaine the information from
 	 */
-	this.initializeWithCookie = function(name) {
+	this.initializeWithCookieData = function(data) {
 		var result = result;
 
 			
@@ -270,7 +270,7 @@ function CwrcApi(url, jq) {
 			type : 'POST',
 			async : false,
 			data : {
-				name: name
+				name: data
 			},
 			success : function(data) {
 				result = data;
