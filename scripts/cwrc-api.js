@@ -259,9 +259,9 @@ function CwrcApi(url, jq) {
 	// Public functions
 	/**
 	 * Initialize the data using a set of existing cookies.
-	 * var data An array of cookie information including names and data.
+	 * var name The cookie to obtaine the information from
 	 */
-	this.initializeWithCookieData = function(data) {
+	this.initializeWithCookie = function(name) {
 		var result = result;
 
 			
@@ -270,7 +270,7 @@ function CwrcApi(url, jq) {
 			type : 'POST',
 			async : false,
 			data : {
-				data: data
+				name: name
 			},
 			success : function(data) {
 				result = data;

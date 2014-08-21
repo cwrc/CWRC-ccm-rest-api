@@ -34,21 +34,21 @@ function is_initialized() {
 }
 
 function initialize_cookie() {
-	$data = $_POST['data'];
+	$name = $_POST['name'];
 
-	/*$cookie = $_COOKIE[$name];
+	$cookie = $_COOKIE[$name];
 
 	$cookies = '';
 	foreach ($http_response_header as $s) {
-		if (preg_match('/^Set-Cookie:\s*([^;]+)/', $s, $parts)) {
+		if (preg_match('/^([^;]+)/', $s, $parts)) {
 			$cookies = $cookies . $parts[1] . ';';
 		}
-	}*/
-	$cookies = '';
+	}
+	/*$cookies = '';
 	foreach ($data as $d){
 		if (preg_match('/^([^;]+)/', $d, $parts))
 		$cookies = $cookies . $parts[1] . ';';
-	}
+	}*/
 
 	//setcookie(CWRC_COOKIE, $name . '=' . $cookie, 0, '/');
 	$_SESSION[CWRC_COOKIE] = $cookies;
