@@ -35,15 +35,17 @@ function is_initialized() {
 
 function initialize_cookie() {
 	$name = $_POST['name'];
+	$data = $_POST['data'];
 
-	$cookie = $_COOKIE[$name];
+	/*$cookie = $_COOKIE[$name];
 
 	$cookies = '';
 	foreach ($http_response_header as $s) {
 		if (preg_match('/^Set-Cookie:\s*([^;]+)/', $s, $parts)) {
 			$cookies = $cookies . $parts[1] . ';';
 		}
-	}
+	}*/
+	$cookies = $name . '=' . $data . ';';
 
 	//setcookie(CWRC_COOKIE, $name . '=' . $cookie, 0, '/');
 	$_SESSION[CWRC_COOKIE] = $cookies;

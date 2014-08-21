@@ -106,6 +106,7 @@ function CwrcEntity(type, url, jq) {
 	this.searchEntity = function(searchObject){
 		var limit = searchObject.limit !== undefined ? searchObject.limit : 100;
 		var page = searchObject.page !== undefined ? searchObject.page : 0;
+		var restrictions = searchObject.restrictions !== undefined ? searchObject.restrictions : [];
 
 		return jq.ajax({
 			url : url + '/' + type + "/search",
@@ -114,7 +115,8 @@ function CwrcEntity(type, url, jq) {
 			data: {
 				query: searchObject.query,
 				limit: limit,
-				page: page
+				page: page,
+				restrictions: restrictions
 			},
 			success : function(data) {
 				result = data === "" ? {} : JSON.parse(data);
@@ -255,7 +257,12 @@ function CwrcApi(url, jq) {
 	}
 
 	// Public functions
-	this.initializeWithCookie = function(name) {
+	/**
+	 * Initialize the data using a set of existing cookies.
+	 * var name An array of names used to represent the cookie.
+	 * var data An array of data directly related to the cookie.
+	 */
+	this.initializeWithCookieData = function(name, data) {
 		var result = result;
 
 			
@@ -264,7 +271,8 @@ function CwrcApi(url, jq) {
 			type : 'POST',
 			async : false,
 			data : {
-				name : name
+				name : name,
+				data: data
 			},
 			success : function(data) {
 				result = data;
