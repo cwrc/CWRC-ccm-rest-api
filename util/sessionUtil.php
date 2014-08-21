@@ -39,11 +39,11 @@ function initialize_cookie() {
 	$cookie = $_COOKIE[$name];
 
 	$cookies = '';
-	foreach ($http_response_header as $s) {
-		if (preg_match('/^([^;]+)/', $s, $parts)) {
+	/*foreach ($http_response_header as $s) {
+		if (preg_match('/^Set-Cookie:\s*([^;]+)/', $s, $parts)) {
 			$cookies = $cookies . $parts[1] . ';';
 		}
-	}
+	}*/
 	/*$cookies = '';
 	foreach ($data as $d){
 		if (preg_match('/^([^;]+)/', $d, $parts))
@@ -51,6 +51,7 @@ function initialize_cookie() {
 	}*/
 
 	//setcookie(CWRC_COOKIE, $name . '=' . $cookie, 0, '/');
+	$cookies = $cookies . $name . "=" . $cookie . ';';
 	$_SESSION[CWRC_COOKIE] = $cookies;
 }
 
