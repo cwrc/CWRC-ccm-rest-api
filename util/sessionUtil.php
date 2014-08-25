@@ -38,7 +38,8 @@ function initialize_cookie() {
 	
 	$cookies = '';
 	foreach($data as $d){
-		$cookies = $cookies . $d . ';';
+		$cookies = $cookies . trim($d) . ';';
+		//error_log(trim($d));
 	}
 	
 	$_SESSION[CWRC_COOKIE] = $cookies;

@@ -266,11 +266,11 @@ function CwrcApi(url, jq) {
 
 			
 		jq.ajax({
-			url : url + "initialize_user",
+			url : url + "initialize_cookie",
 			type : 'POST',
 			async : false,
 			data : {
-				name: data
+				data: data
 			},
 			success : function(data) {
 				result = data;
