@@ -37,9 +37,19 @@ function initialize_cookie() {
 	$data = explode(';', $_POST['data']);
 	
 	$cookies = '';
-	foreach($data as $d){
-		$cookies = $cookies . trim($d) . ';';
-		//error_log(trim($d));
+	if(empty($data[0])){
+		//error_log("empty");
+		foreach(getallheaders() as $name => $value){
+			if($name == "Cookie"){
+				$cookies = $cookies . $name . "=" . $value;
+			}
+		}
+	}else{
+		//error_log("not empty " . count($data));
+		foreach($data as $d){
+			$cookies = $cookies . trim($d) . ';';
+			//error_log(trim($d));
+		}	
 	}
 	
 	$_SESSION[CWRC_COOKIE] = $cookies;
