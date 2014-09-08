@@ -41,7 +41,7 @@ function initialize_cookie() {
 		//error_log("empty");
 		foreach(getallheaders() as $name => $value){
 			if($name == "Cookie"){
-				$cookies = $cookies . $name . "=" . $value;
+				$cookies = $cookies . $value;
 			}
 		}
 	}else{
